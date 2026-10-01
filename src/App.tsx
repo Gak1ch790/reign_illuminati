@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Stats, Card, Choice, GameScreen, Director, Era, Item, MetaProgress } from './types';
 import { cards, characters, eras, directors, items } from './data/storyData';
@@ -18,8 +18,6 @@ const INITIAL_STATS: Stats = {
   chaos: 50,
   funds: 50,
 };
-
-const MAX_TURNS_PER_DIRECTOR = 15;
 
 interface StatChange {
   key: keyof Stats;
@@ -82,7 +80,7 @@ function App() {
   // Мета-прогрессия
   const [metaProgress, setMetaProgress] = useState<MetaProgress>(loadMetaProgress());
   
-  // Глобальная хронология (не сбрасывается!)
+  // Глобальная хронология (НЕ сбрасывается!)
   const [currentEraIndex, setCurrentEraIndex] = useState(0);
   const [currentDirectorIndex, setCurrentDirectorIndex] = useState(0);
   const [currentYear, setCurrentYear] = useState(33);
@@ -161,7 +159,6 @@ function App() {
     setPreviousDirector(null);
     
     // НЕ сбрасываем эпоху и год — продолжаем глобальный сюжет
-    // Но если это первая игра, начинаем с начала
     if (metaProgress.totalGames === 0) {
       setCurrentEraIndex(0);
       setCurrentDirectorIndex(0);
@@ -269,47 +266,11 @@ function App() {
       return;
     }
 
-    // Проверка перехода к следующему директору
-    if (turn + 1 >= MAX_TURNS_PER_DIRECTOR) {
-      advanceToNextDirector();
-      return;
-    }
-
     // Получаем следующую карточку
     const era = getCurrentEra();
     const nextCard = getNextCard(newStats, [...history, currentCard?.id || ''], completedArcs, era.id, currentYear, collectedItems);
     setCurrentCard(nextCard);
     setCardKey(prev => prev + 1);
-  };
-
-  const advanceToNextDirector = () => {
-    const era = getCurrentEra();
-    const nextDirectorIndex = (currentDirectorIndex + 1) % era.directors.length;
-    
-    // Если прошли всех директоров в эпохе, переходим к следующей эпохе
-    if (nextDirectorIndex === 0) {
-      const nextEraIndex = (currentEraIndex + 1) % eras.length;
-      
-      // Обновляем мета-прогрессию
-      const updatedProgress = updateMetaProgress({
-        completedEras: Array.from(new Set([...metaProgress.completedEras, era.id])),
-      });
-      setMetaProgress(updatedProgress);
-      
-      if (nextEraIndex === 0) {
-        // Цикл завершён — концовка
-        setScreen('ending');
-        return;
-      }
-      setCurrentEraIndex(nextEraIndex);
-      setCurrentDirectorIndex(0);
-    } else {
-      setCurrentDirectorIndex(nextDirectorIndex);
-    }
-
-    setPreviousDirector(getCurrentDirector());
-    setTurn(0);
-    setScreen('heir');
   };
 
   const handleItemContinue = () => {
@@ -339,14 +300,14 @@ function App() {
   };
 
   const handleProgressContinue = () => {
-    startNewGameFromBeginning();
+    // Продолжаем с того же года и директора
+    startGame();
   };
 
   // Title Screen
   if (screen === 'title') {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-gray-950 via-indigo-950 to-black overflow-hidden relative">
-        {/* Animated background */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div
             className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10"
@@ -383,7 +344,6 @@ function App() {
           ))}
         </div>
 
-        {/* Title content */}
         <motion.div
           className="relative z-10 text-center"
           initial={{ opacity: 0, y: 30 }}
@@ -537,7 +497,6 @@ function App() {
       } : { x: 0, y: 0 }}
       transition={{ duration: 0.3, repeat: isCritical ? Infinity : 0, repeatDelay: 2 }}
     >
-      {/* Ambient background particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(8)].map((_, i) => (
           <motion.div
@@ -562,7 +521,6 @@ function App() {
         ))}
       </div>
 
-      {/* Header */}
       <div className="relative z-10 pt-4 pb-2">
         <div className="flex justify-between items-center px-4 mb-2">
           <div className="text-gray-400 text-xs">
@@ -571,14 +529,13 @@ function App() {
             Год <span className="text-amber-400 font-bold">{currentYear}</span>
           </div>
           <div className="text-gray-500 text-xs">
-            Ход: <span className="text-amber-400 font-bold">{turn}</span>/{MAX_TURNS_PER_DIRECTOR}
+            Ход: <span className="text-amber-400 font-bold">{turn}</span>
           </div>
         </div>
         <StatBars stats={stats} changes={statChanges} />
         {collectedItemsList.length > 0 && <ItemDisplay items={collectedItemsList} />}
       </div>
 
-      {/* Card area */}
       <div className="relative z-10 flex-1 flex items-center justify-center px-4 py-4">
         <AnimatePresence mode="wait">
           {currentCard && (
@@ -591,7 +548,6 @@ function App() {
         </AnimatePresence>
       </div>
 
-      {/* Footer */}
       <div className="relative z-10 pb-4 pt-2 text-center">
         <p className="text-gray-600 text-xs">
           Свайпни карточку ← или → для выбора
