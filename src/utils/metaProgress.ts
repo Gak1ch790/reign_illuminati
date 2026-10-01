@@ -107,16 +107,3 @@ export const checkAchievements = (progress: MetaProgress): string[] => {
   
   return newAchievements;
 };
-
-export const achievementsInfo: Record<string, { name: string; description: string; icon: string }> = {
-  first_game: { name: 'Первые шаги', description: 'Сыграйте первую игру', icon: '🎮' },
-  veteran: { name: 'Ветеран', description: 'Сыграйте 5 игр', icon: '⭐' },
-  millennium: { name: 'Тысячелетие', description: 'Достигните 1000 года', icon: '📅' },
-  modern_era: { name: 'Современность', description: 'Достигните 2000 года', icon: '🌐' },
-  collector: { name: 'Коллекционер', description: 'Соберите 5 предметов', icon: '💎' },
-  hoarder: { name: 'Собиратель', description: 'Соберите 15 предметов', icon: '🏆' },
-  time_traveler: { name: 'Путешественник во времени', description: 'Пройдите 3 эпохи', icon: '⏳' },
-  eternal: { name: 'Вечный', description: 'Пройдите все 6 эпох', icon: '♾️' },
-  diverse: { name: 'Разнообразие', description: 'Получите 3 разные концовки', icon: '🎭' },
-  completionist: { name: 'Перфекционист', description: 'Получите все 6 концовок', icon: '👑' },
-};

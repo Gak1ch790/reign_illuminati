@@ -35,24 +35,9 @@ const GameCard: React.FC<GameCardProps> = ({ card, onChoice }) => {
     onChoice(direction === 'left' ? card.leftChoice : card.rightChoice);
   };
 
-  // Определяем стиль карточки
-  const isBranchPoint = card.isBranchPoint;
-  const isEasterEgg = card.isEasterEgg;
-  const isArc = card.arcId && card.arcStep === 1;
-
-  const getCardBorder = () => {
-    if (isBranchPoint) return 'border-amber-400 shadow-amber-500/30';
-    if (isEasterEgg) return 'border-purple-400 shadow-purple-500/30';
-    if (isArc) return 'border-cyan-400 shadow-cyan-500/30';
-    return 'border-gray-700 shadow-black/50';
-  };
-
-  const getCardGlow = () => {
-    if (isBranchPoint) return 'from-amber-900/20 via-transparent to-transparent';
-    if (isEasterEgg) return 'from-purple-900/20 via-transparent to-transparent';
-    if (isArc) return 'from-cyan-900/20 via-transparent to-transparent';
-    return 'from-transparent via-transparent to-transparent';
-  };
+  // Единый стиль карточки без визуальных подсказок
+  const cardBorder = 'border-gray-700 shadow-black/50';
+  const cardGlow = 'from-transparent via-transparent to-transparent';
 
   return (
     <div className="relative w-full max-w-sm mx-auto" style={{ perspective: 1000 }}>
@@ -71,7 +56,7 @@ const GameCard: React.FC<GameCardProps> = ({ card, onChoice }) => {
 
       {/* Card */}
       <motion.div
-        className={`relative rounded-xl sm:rounded-2xl overflow-hidden cursor-grab active:cursor-grabbing select-none border-2 ${getCardBorder()} shadow-2xl`}
+        className={`relative rounded-xl sm:rounded-2xl overflow-hidden cursor-grab active:cursor-grabbing select-none border-2 ${cardBorder} shadow-2xl`}
         style={{ x, rotate, scale }}
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
@@ -86,7 +71,7 @@ const GameCard: React.FC<GameCardProps> = ({ card, onChoice }) => {
       >
         {/* Background */}
         <div className="absolute inset-0 bg-gradient-to-b from-gray-800 via-gray-850 to-gray-900" />
-        <div className={`absolute inset-0 bg-gradient-to-b ${getCardGlow()}`} />
+        <div className={`absolute inset-0 bg-gradient-to-b ${cardGlow}`} />
         
         {/* Special badges removed - no visual hints */}
 
