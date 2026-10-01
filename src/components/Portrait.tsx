@@ -156,6 +156,152 @@ const HeirPortrait: React.FC = () => (
   </svg>
 );
 
+const PopePortrait: React.FC = () => (
+  <svg viewBox="0 0 200 200" className="w-full h-full">
+    <rect width="200" height="200" fill="#2a2520" />
+    {/* Robe */}
+    <path d="M45 200 L50 130 L75 115 L100 120 L125 115 L150 130 L155 200 Z" fill="#f5f5dc" stroke="#0d0a1a" strokeWidth="2.5" />
+    {/* Gold trim */}
+    <path d="M75 115 L100 120 L125 115" fill="none" stroke="#ffd700" strokeWidth="3" />
+    {/* Face */}
+    <ellipse cx="100" cy="95" rx="35" ry="40" fill="#e8d5b8" stroke="#0d0a1a" strokeWidth="2.5" />
+    {/* Mitre (hat) */}
+    <path d="M70 70 L100 30 L130 70 L120 80 L100 75 L80 80 Z" fill="#f5f5dc" stroke="#0d0a1a" strokeWidth="2" />
+    <path d="M85 50 L100 35 L115 50" fill="none" stroke="#ffd700" strokeWidth="2" />
+    {/* Eyes - wise */}
+    <ellipse cx="85" cy="90" rx="6" ry="5" fill="#0d0a1a" />
+    <ellipse cx="115" cy="90" rx="6" ry="5" fill="#0d0a1a" />
+    <circle cx="86" cy="89" r="2" fill="#fff" />
+    <circle cx="116" cy="89" r="2" fill="#fff" />
+    {/* Eyebrows - stern */}
+    <path d="M75 82 Q85 78 95 82" fill="none" stroke="#0d0a1a" strokeWidth="2" strokeLinecap="round" />
+    <path d="M105 82 Q115 78 125 82" fill="none" stroke="#0d0a1a" strokeWidth="2" strokeLinecap="round" />
+    {/* Beard */}
+    <path d="M80 110 Q85 135 100 140 Q115 135 120 110" fill="#e8e8e8" stroke="#0d0a1a" strokeWidth="1.5" />
+    {/* Mouth - thin */}
+    <path d="M90 115 Q100 118 110 115" fill="none" stroke="#0d0a1a" strokeWidth="1.5" />
+    {/* Cross on chest */}
+    <rect x="96" y="150" width="8" height="25" fill="#ffd700" stroke="#0d0a1a" strokeWidth="1" />
+    <rect x="90" y="158" width="20" height="8" fill="#ffd700" stroke="#0d0a1a" strokeWidth="1" />
+  </svg>
+);
+
+const KnightPortrait: React.FC = () => (
+  <svg viewBox="0 0 200 200" className="w-full h-full">
+    <rect width="200" height="200" fill="#1a1a2a" />
+    {/* Armor */}
+    <path d="M50 200 L55 130 L80 115 L100 120 L120 115 L145 130 L150 200 Z" fill="#6a6a7a" stroke="#0d0a1a" strokeWidth="2.5" />
+    {/* Helmet */}
+    <path d="M65 85 Q65 45 100 40 Q135 45 135 85 L135 100 L65 100 Z" fill="#8a8a9a" stroke="#0d0a1a" strokeWidth="2.5" />
+    {/* Visor */}
+    <rect x="75" y="80" width="50" height="15" rx="2" fill="#0d0a1a" />
+    <line x1="85" y1="80" x2="85" y2="95" stroke="#4a4a5a" strokeWidth="1" />
+    <line x1="95" y1="80" x2="95" y2="95" stroke="#4a4a5a" strokeWidth="1" />
+    <line x1="105" y1="80" x2="105" y2="95" stroke="#4a4a5a" strokeWidth="1" />
+    <line x1="115" y1="80" x2="115" y2="95" stroke="#4a4a5a" strokeWidth="1" />
+    {/* Plume */}
+    <path d="M100 40 Q110 20 120 30 Q115 35 100 40" fill="#cc3333" stroke="#0d0a1a" strokeWidth="1.5" />
+    {/* Sword */}
+    <rect x="140" y="140" width="4" height="50" fill="#c0c0c0" stroke="#0d0a1a" strokeWidth="1" />
+    <rect x="135" y="138" width="14" height="6" fill="#8a6a3a" stroke="#0d0a1a" strokeWidth="1" />
+    {/* Cross on chest */}
+    <rect x="96" y="150" width="8" height="20" fill="#cc3333" />
+    <rect x="90" y="156" width="20" height="8" fill="#cc3333" />
+  </svg>
+);
+
+const MerchantPortrait: React.FC = () => (
+  <svg viewBox="0 0 200 200" className="w-full h-full">
+    <rect width="200" height="200" fill="#2a2015" />
+    {/* Robe */}
+    <path d="M50 200 L55 130 L80 115 L100 120 L120 115 L145 130 L150 200 Z" fill="#4a3520" stroke="#0d0a1a" strokeWidth="2.5" />
+    {/* Face */}
+    <ellipse cx="100" cy="95" rx="35" ry="40" fill="#d4b896" stroke="#0d0a1a" strokeWidth="2.5" />
+    {/* Turban */}
+    <path d="M65 80 Q65 45 100 40 Q135 45 135 80" fill="#8a2a2a" stroke="#0d0a1a" strokeWidth="2" />
+    <circle cx="100" cy="55" r="8" fill="#ffd700" stroke="#0d0a1a" strokeWidth="1.5" />
+    {/* Eyes - cunning */}
+    <ellipse cx="85" cy="90" rx="7" ry="5" fill="#fff" stroke="#0d0a1a" strokeWidth="1.5" />
+    <ellipse cx="115" cy="90" rx="7" ry="5" fill="#fff" stroke="#0d0a1a" strokeWidth="1.5" />
+    <circle cx="87" cy="90" r="3" fill="#3a2a1a" />
+    <circle cx="117" cy="90" r="3" fill="#3a2a1a" />
+    {/* Eyebrows - raised */}
+    <path d="M75 82 Q85 78 95 82" fill="none" stroke="#0d0a1a" strokeWidth="2" strokeLinecap="round" />
+    <path d="M105 82 Q115 78 125 82" fill="none" stroke="#0d0a1a" strokeWidth="2" strokeLinecap="round" />
+    {/* Mustache */}
+    <path d="M85 108 Q90 112 95 108" fill="none" stroke="#0d0a1a" strokeWidth="2" strokeLinecap="round" />
+    <path d="M105 108 Q110 112 115 108" fill="none" stroke="#0d0a1a" strokeWidth="2" strokeLinecap="round" />
+    {/* Smile */}
+    <path d="M88 115 Q100 122 112 115" fill="none" stroke="#0d0a1a" strokeWidth="2" strokeLinecap="round" />
+    {/* Beard */}
+    <path d="M85 120 Q90 140 100 145 Q110 140 115 120" fill="#3a2a1a" stroke="#0d0a1a" strokeWidth="1.5" />
+    {/* Gold coins */}
+    <circle cx="70" cy="160" r="6" fill="#ffd700" stroke="#0d0a1a" strokeWidth="1" />
+    <circle cx="130" cy="165" r="5" fill="#ffd700" stroke="#0d0a1a" strokeWidth="1" />
+  </svg>
+);
+
+const ScientistPortrait: React.FC = () => (
+  <svg viewBox="0 0 200 200" className="w-full h-full">
+    <rect width="200" height="200" fill="#15202a" />
+    {/* Lab coat */}
+    <path d="M50 200 L55 130 L80 115 L100 120 L120 115 L145 130 L150 200 Z" fill="#e8e8e8" stroke="#0d0a1a" strokeWidth="2.5" />
+    {/* Face */}
+    <ellipse cx="100" cy="95" rx="35" ry="40" fill="#e8d5b8" stroke="#0d0a1a" strokeWidth="2.5" />
+    {/* Hair - messy */}
+    <path d="M65 80 Q60 45 80 40 Q90 35 100 38 Q110 35 120 40 Q140 45 135 80" fill="#8a8a8a" stroke="#0d0a1a" strokeWidth="2" />
+    <path d="M70 50 Q75 40 85 45" fill="#8a8a8a" stroke="#0d0a1a" strokeWidth="1" />
+    <path d="M130 50 Q125 40 115 45" fill="#8a8a8a" stroke="#0d0a1a" strokeWidth="1" />
+    {/* Glasses */}
+    <circle cx="85" cy="90" r="10" fill="none" stroke="#0d0a1a" strokeWidth="2" />
+    <circle cx="115" cy="90" r="10" fill="none" stroke="#0d0a1a" strokeWidth="2" />
+    <line x1="95" y1="90" x2="105" y2="90" stroke="#0d0a1a" strokeWidth="2" />
+    {/* Eyes behind glasses */}
+    <circle cx="85" cy="90" r="3" fill="#0d0a1a" />
+    <circle cx="115" cy="90" r="3" fill="#0d0a1a" />
+    {/* Mouth - thoughtful */}
+    <path d="M90 115 Q100 118 110 115" fill="none" stroke="#0d0a1a" strokeWidth="2" strokeLinecap="round" />
+    {/* Beard */}
+    <path d="M85 120 Q90 145 100 150 Q110 145 115 120" fill="#8a8a8a" stroke="#0d0a1a" strokeWidth="1.5" />
+    {/* Flask */}
+    <path d="M60 160 L65 150 L75 150 L80 160 L75 170 L65 170 Z" fill="#4a90d9" opacity="0.6" stroke="#0d0a1a" strokeWidth="1.5" />
+    <circle cx="70" cy="160" r="3" fill="#fff" opacity="0.4" />
+  </svg>
+);
+
+const AIPortrait: React.FC = () => (
+  <svg viewBox="0 0 200 200" className="w-full h-full">
+    <rect width="200" height="200" fill="#0a1520" />
+    {/* Body - robotic */}
+    <rect x="60" y="120" width="80" height="80" rx="10" fill="#2a3a4a" stroke="#0d0a1a" strokeWidth="2.5" />
+    {/* Head */}
+    <rect x="65" y="50" width="70" height="70" rx="15" fill="#3a4a5a" stroke="#0d0a1a" strokeWidth="2.5" />
+    {/* Screen face */}
+    <rect x="75" y="60" width="50" height="50" rx="5" fill="#0a1520" stroke="#4a90d9" strokeWidth="2" />
+    {/* Eyes - glowing */}
+    <circle cx="90" cy="80" r="6" fill="#4a90d9">
+      <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="110" cy="80" r="6" fill="#4a90d9">
+      <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" />
+    </circle>
+    {/* Mouth - digital */}
+    <rect x="85" y="95" width="30" height="3" fill="#4a90d9">
+      <animate attributeName="width" values="30;20;30" dur="1.5s" repeatCount="indefinite" />
+    </rect>
+    {/* Antenna */}
+    <line x1="100" y1="50" x2="100" y2="35" stroke="#4a90d9" strokeWidth="2" />
+    <circle cx="100" cy="33" r="4" fill="#4a90d9">
+      <animate attributeName="r" values="4;6;4" dur="1s" repeatCount="indefinite" />
+    </circle>
+    {/* Circuit patterns */}
+    <line x1="70" y1="140" x2="90" y2="140" stroke="#4a90d9" strokeWidth="1" opacity="0.5" />
+    <line x1="110" y1="150" x2="130" y2="150" stroke="#4a90d9" strokeWidth="1" opacity="0.5" />
+    <circle cx="80" cy="160" r="3" fill="#4a90d9" opacity="0.5" />
+    <circle cx="120" cy="170" r="3" fill="#4a90d9" opacity="0.5" />
+  </svg>
+);
+
 const Portrait: React.FC<PortraitProps> = ({ character, className }) => {
   const portraits: Record<string, React.FC> = {
     architect: ArchitectPortrait,
@@ -163,6 +309,11 @@ const Portrait: React.FC<PortraitProps> = ({ character, className }) => {
     agent: AgentPortrait,
     oracle: OraclePortrait,
     heir: HeirPortrait,
+    pope: PopePortrait,
+    knight: KnightPortrait,
+    merchant: MerchantPortrait,
+    scientist: ScientistPortrait,
+    ai: AIPortrait,
   };
 
   const SelectedPortrait = portraits[character] || ArchitectPortrait;

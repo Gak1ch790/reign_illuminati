@@ -1,11 +1,14 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Stats, Card, Choice, GameScreen } from './types';
-import { cards, characters } from './data/storyData';
+import { Stats, Card, Choice, GameScreen, Director, Era, Item } from './types';
+import { cards, characters, eras, directors, items } from './data/storyData';
 import GameCard from './components/GameCard';
 import StatBars from './components/StatBars';
 import GameOverScreen from './components/GameOverScreen';
 import EndingScreen from './components/EndingScreen';
+import HeirScreen from './components/HeirScreen';
+import ItemGetScreen from './components/ItemGetScreen';
+import ItemDisplay from './components/ItemDisplay';
 
 const INITIAL_STATS: Stats = {
   secrecy: 50,
@@ -14,7 +17,7 @@ const INITIAL_STATS: Stats = {
   funds: 50,
 };
 
-const MAX_TURNS = 30;
+const MAX_TURNS_PER_DIRECTOR = 15; // Ходов на одного директора
 
 interface StatChange {
   key: keyof Stats;
@@ -22,7 +25,7 @@ interface StatChange {
   id: number;
 }
 
-// Простой звуковой эффект через Web Audio API
+// Звуковые эффекты
 const playSound = (frequency: number, duration: number, type: OscillatorType = 'sine') => {
   try {
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -40,9 +43,7 @@ const playSound = (frequency: number, duration: number, type: OscillatorType = '
     
     oscillator.start(audioContext.currentTime);
     oscillator.stop(audioContext.currentTime + duration);
-  } catch (e) {
-    // Звук не поддерживается
-  }
+  } catch (e) {}
 };
 
 const playSwipeSound = (direction: 'left' | 'right') => {
@@ -58,25 +59,47 @@ const playGameOverSound = () => {
   setTimeout(() => playSound(100, 0.5, 'sawtooth'), 200);
 };
 
+const playItemSound = () => {
+  playSound(600, 0.2, 'sine');
+  setTimeout(() => playSound(800, 0.3, 'sine'), 150);
+};
+
 function App() {
   const [screen, setScreen] = useState<GameScreen>('title');
   const [stats, setStats] = useState<Stats>(INITIAL_STATS);
   const [currentCard, setCurrentCard] = useState<Card | null>(null);
   const [turn, setTurn] = useState(0);
+  const [totalTurns, setTotalTurns] = useState(0);
   const [history, setHistory] = useState<string[]>([]);
   const [completedArcs, setCompletedArcs] = useState<string[]>([]);
   const [gameOverType, setGameOverType] = useState<string>('');
   const [cardKey, setCardKey] = useState(0);
   const [statChanges, setStatChanges] = useState<StatChange[]>([]);
   const changeIdRef = useRef(0);
+  
+  // Новые состояния для эпох и наследников
+  const [currentEraIndex, setCurrentEraIndex] = useState(0);
+  const [currentDirectorIndex, setCurrentDirectorIndex] = useState(0);
+  const [currentYear, setCurrentYear] = useState(33);
+  const [collectedItems, setCollectedItems] = useState<string[]>([]);
+  const [pendingItem, setPendingItem] = useState<Item | null>(null);
+  const [previousDirector, setPreviousDirector] = useState<Director | null>(null);
 
-  const getNextCard = useCallback((currentStats: Stats, currentHistory: string[], currentArcs: string[]): Card => {
-    // Filter available cards based on conditions
+  const getCurrentEra = (): Era => eras[currentEraIndex];
+  const getCurrentDirector = (): Director => {
+    const era = getCurrentEra();
+    const directorId = era.directors[currentDirectorIndex % era.directors.length];
+    return directors.find(d => d.id === directorId) || directors[0];
+  };
+
+  const getNextCard = useCallback((currentStats: Stats, currentHistory: string[], currentArcs: string[], currentEra: string, collectedItemsList: string[]): Card => {
     const availableCards = cards.filter(card => {
-      // Skip already shown cards
       if (currentHistory.includes(card.id)) return false;
 
-      // Check conditions
+      // Проверка эпохи
+      if (card.era && card.era !== currentEra) return false;
+
+      // Проверка условий
       if (card.conditions) {
         if (card.conditions.completedArcs) {
           const hasAllArcs = card.conditions.completedArcs.every(arc => currentArcs.includes(arc));
@@ -98,27 +121,16 @@ function App() {
     });
 
     if (availableCards.length === 0) {
-      // Reset history if we've seen all cards
-      const allCards = cards.filter(card => {
-        if (card.conditions?.completedArcs) {
-          return card.conditions.completedArcs.every(arc => currentArcs.includes(arc));
-        }
-        if (card.conditions?.minStats) {
-          for (const [key, value] of Object.entries(card.conditions.minStats)) {
-            if (currentStats[key as keyof Stats] < (value as number)) return false;
-          }
-        }
-        return true;
-      });
-      
-      if (allCards.length > 0) {
-        return allCards[Math.floor(Math.random() * allCards.length)];
+      // Если нет карточек для текущей эпохи, берём универсальные
+      const universalCards = cards.filter(c => !c.era && !currentHistory.includes(c.id));
+      if (universalCards.length > 0) {
+        return universalCards[Math.floor(Math.random() * universalCards.length)];
       }
       return cards[0];
     }
 
-    // Prioritize cards with higher priority
-    const priorityCards = availableCards.filter(c => c.priority && c.priority > 50);
+    // Приоритет карточкам с высоким priority
+    const priorityCards = availableCards.filter(c => c.priority && c.priority > 80);
     if (priorityCards.length > 0 && Math.random() > 0.3) {
       return priorityCards[Math.floor(Math.random() * priorityCards.length)];
     }
@@ -129,25 +141,48 @@ function App() {
   const startGame = () => {
     setStats(INITIAL_STATS);
     setTurn(0);
+    setTotalTurns(0);
     setHistory([]);
     setCompletedArcs([]);
     setGameOverType('');
+    setCurrentEraIndex(0);
+    setCurrentDirectorIndex(0);
+    setCurrentYear(33);
+    setCollectedItems([]);
+    setPendingItem(null);
+    setPreviousDirector(null);
+    setScreen('heir'); // Показываем первого директора
+  };
+
+  const startGameplay = () => {
     setScreen('game');
-    
-    const firstCard = getNextCard(INITIAL_STATS, [], []);
-    setCurrentCard(firstCard);
+    const era = getCurrentEra();
+    const nextCard = getNextCard(INITIAL_STATS, [], [], era.id, []);
+    setCurrentCard(nextCard);
     setCardKey(prev => prev + 1);
   };
 
   const handleChoice = (choice: Choice) => {
-    // Play sound based on which choice was made
     const isRightChoice = choice === currentCard?.rightChoice;
     playSwipeSound(isRightChoice ? 'right' : 'left');
 
-    // Apply effects
+    // Применяем эффекты
     const newStats = { ...stats };
     const changes: StatChange[] = [];
     
+    // Применяем пассивные эффекты от предметов
+    collectedItems.forEach(itemId => {
+      const item = items.find(i => i.id === itemId);
+      if (item?.passiveEffect) {
+        for (const [key, value] of Object.entries(item.passiveEffect)) {
+          const statKey = key as keyof Stats;
+          const numValue = value as number;
+          newStats[statKey] = Math.max(0, Math.min(100, newStats[statKey] + numValue));
+        }
+      }
+    });
+
+    // Применяем эффекты выбора
     for (const [key, value] of Object.entries(choice.effects)) {
       const statKey = key as keyof Stats;
       const numValue = value as number;
@@ -161,14 +196,31 @@ function App() {
     setStatChanges(changes);
     setStats(newStats);
     setTurn(prev => prev + 1);
+    setTotalTurns(prev => prev + 1);
     setHistory(prev => [...prev, currentCard?.id || '']);
 
-    // Track completed arcs
+    // Обновляем год
+    setCurrentYear(prev => prev + Math.floor(Math.random() * 5) + 1);
+
+    // Проверяем получение предмета
+    if (choice.itemReward && !collectedItems.includes(choice.itemReward)) {
+      const item = items.find(i => i.id === choice.itemReward);
+      if (item) {
+        setPendingItem(item);
+        setCollectedItems(prev => [...prev, item.id]);
+        setTimeout(() => {
+          playItemSound();
+          setScreen('item_get');
+        }, 500);
+        return;
+      }
+    }
+
     if (currentCard?.arcId && !completedArcs.includes(currentCard.arcId)) {
       setCompletedArcs(prev => [...prev, currentCard.arcId!]);
     }
 
-    // Check game over conditions
+    // Проверка Game Over
     const gameOverCheck = checkGameOver(newStats);
     if (gameOverCheck) {
       playGameOverSound();
@@ -177,14 +229,48 @@ function App() {
       return;
     }
 
-    // Check if reached max turns (ending)
-    if (turn + 1 >= MAX_TURNS) {
-      setScreen('ending');
+    // Проверка перехода к следующему директору
+    if (turn + 1 >= MAX_TURNS_PER_DIRECTOR) {
+      advanceToNextDirector();
       return;
     }
 
-    // Get next card
-    const nextCard = getNextCard(newStats, [...history, currentCard?.id || ''], completedArcs);
+    // Получаем следующую карточку
+    const era = getCurrentEra();
+    const nextCard = getNextCard(newStats, [...history, currentCard?.id || ''], completedArcs, era.id, collectedItems);
+    setCurrentCard(nextCard);
+    setCardKey(prev => prev + 1);
+  };
+
+  const advanceToNextDirector = () => {
+    const era = getCurrentEra();
+    const nextDirectorIndex = (currentDirectorIndex + 1) % era.directors.length;
+    
+    // Если прошли всех директоров в эпохе, переходим к следующей эпохе
+    if (nextDirectorIndex === 0) {
+      const nextEraIndex = (currentEraIndex + 1) % eras.length;
+      if (nextEraIndex === 0) {
+        // Цикл завершён — концовка
+        setScreen('ending');
+        return;
+      }
+      setCurrentEraIndex(nextEraIndex);
+      setCurrentDirectorIndex(0);
+    } else {
+      setCurrentDirectorIndex(nextDirectorIndex);
+    }
+
+    setPreviousDirector(getCurrentDirector());
+    setTurn(0);
+    setScreen('heir');
+  };
+
+  const handleItemContinue = () => {
+    setPendingItem(null);
+    setScreen('game');
+    
+    const era = getCurrentEra();
+    const nextCard = getNextCard(stats, history, completedArcs, era.id, collectedItems);
     setCurrentCard(nextCard);
     setCardKey(prev => prev + 1);
   };
@@ -207,7 +293,6 @@ function App() {
       <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-gray-950 via-indigo-950 to-black overflow-hidden relative">
         {/* Animated background */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* All-seeing eye */}
           <motion.div
             className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10"
             animate={{ rotate: 360 }}
@@ -220,14 +305,13 @@ function App() {
             </svg>
           </motion.div>
           
-          {/* Floating symbols */}
-          {['👁️', '🔺', '💀', '🗝️', '📜', '🏛️'].map((emoji, i) => (
+          {['👁️', '🔺', '💀', '🗝️', '📜', '🏛️', '⚔️', '🎨', '⚙️', '🌐', '🚀'].map((emoji, i) => (
             <motion.div
               key={i}
               className="absolute text-2xl opacity-20"
               style={{
-                left: `${15 + i * 15}%`,
-                top: `${20 + (i % 3) * 25}%`,
+                left: `${10 + i * 8}%`,
+                top: `${20 + (i % 4) * 20}%`,
               }}
               animate={{
                 y: [0, -20, 0],
@@ -236,7 +320,7 @@ function App() {
               transition={{
                 duration: 4 + i,
                 repeat: Infinity,
-                delay: i * 0.5,
+                delay: i * 0.3,
               }}
             >
               {emoji}
@@ -251,7 +335,6 @@ function App() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          {/* Logo */}
           <motion.div
             className="mb-6"
             animate={{ scale: [1, 1.05, 1] }}
@@ -280,8 +363,8 @@ function App() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            Управляй тайным обществом. Балансируй между властью и безумием. 
-            Каждый выбор имеет последствия.
+            Управляй тайным обществом сквозь века. От Рима до будущего. 
+            Каждый директор оставляет след в истории.
           </motion.p>
 
           <motion.button
@@ -296,24 +379,21 @@ function App() {
           </motion.button>
 
           <motion.div
-            className="mt-8 flex justify-center gap-4"
+            className="mt-8 flex justify-center gap-3 flex-wrap"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.2 }}
           >
-            {characters.slice(0, 4).map((char, i) => (
+            {eras.map((era, i) => (
               <motion.div
-                key={char.id}
-                className="text-2xl"
+                key={era.id}
+                className="text-xl"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.4 + i * 0.1 }}
-                title={char.name}
+                title={era.name}
               >
-                {i === 0 && '🏛️'}
-                {i === 1 && '💼'}
-                {i === 2 && '🕶️'}
-                {i === 3 && '🔮'}
+                {era.ambientEmoji}
               </motion.div>
             ))}
           </motion.div>
@@ -324,11 +404,31 @@ function App() {
             animate={{ opacity: 1 }}
             transition={{ delay: 1.6 }}
           >
-            "Мы не злодеи. Мы — необходимость."
+            "Орден вечен. Директора приходят и уходят."
           </motion.p>
         </motion.div>
       </div>
     );
+  }
+
+  // Heir Screen
+  if (screen === 'heir') {
+    const era = getCurrentEra();
+    const director = getCurrentDirector();
+    return (
+      <HeirScreen
+        director={director}
+        era={era}
+        previousDirector={previousDirector}
+        year={currentYear}
+        onContinue={startGameplay}
+      />
+    );
+  }
+
+  // Item Get Screen
+  if (screen === 'item_get' && pendingItem) {
+    return <ItemGetScreen item={pendingItem} onContinue={handleItemContinue} />;
   }
 
   // Game Over Screen
@@ -338,39 +438,66 @@ function App() {
 
   // Ending Screen
   if (screen === 'ending') {
-    return <EndingScreen stats={stats} turn={turn} onRestart={startGame} />;
+    return <EndingScreen stats={stats} turn={totalTurns} year={currentYear} eraIndex={currentEraIndex} onRestart={startGame} />;
   }
 
-  // Check if any stat is critical
-  const isCritical = Object.values(stats).some(v => v <= 10 || v >= 90);
-
   // Game Screen
+  const isCritical = Object.values(stats).some(v => v <= 10 || v >= 90);
+  const era = getCurrentEra();
+  const collectedItemsList = collectedItems.map(id => items.find(i => i.id === id)).filter(Boolean) as Item[];
+
   return (
     <motion.div
-      className="min-h-screen flex flex-col bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 overflow-hidden"
+      className={`min-h-screen flex flex-col bg-gradient-to-b ${era.bgGradient} overflow-hidden relative`}
       animate={isCritical ? {
         x: [0, -2, 2, -2, 2, 0],
         y: [0, -1, 1, -1, 1, 0],
       } : { x: 0, y: 0 }}
       transition={{ duration: 0.3, repeat: isCritical ? Infinity : 0, repeatDelay: 2 }}
     >
+      {/* Ambient background particles */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(8)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute text-xl opacity-10"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -20, 0],
+              opacity: [0.05, 0.15, 0.05],
+            }}
+            transition={{
+              duration: 6 + Math.random() * 4,
+              repeat: Infinity,
+              delay: Math.random() * 3,
+            }}
+          >
+            {era.ambientEmoji}
+          </motion.div>
+        ))}
+      </div>
+
       {/* Header */}
-      <div className="pt-4 pb-2">
+      <div className="relative z-10 pt-4 pb-2">
         <div className="flex justify-between items-center px-4 mb-2">
-          <div className="text-gray-500 text-xs">
-            Ход: <span className="text-amber-400 font-bold">{turn}</span>/{MAX_TURNS}
+          <div className="text-gray-400 text-xs">
+            <span className="text-amber-400 font-bold">{era.ambientEmoji} {era.name}</span>
+            <span className="mx-2">•</span>
+            Год <span className="text-amber-400 font-bold">{currentYear}</span>
           </div>
           <div className="text-gray-500 text-xs">
-            {currentCard?.arcId && (
-              <span className="text-purple-400">📖 {currentCard.arcId.replace('_', ' ')}</span>
-            )}
+            Ход: <span className="text-amber-400 font-bold">{turn}</span>/{MAX_TURNS_PER_DIRECTOR}
           </div>
         </div>
         <StatBars stats={stats} changes={statChanges} />
+        {collectedItemsList.length > 0 && <ItemDisplay items={collectedItemsList} />}
       </div>
 
       {/* Card area */}
-      <div className="flex-1 flex items-center justify-center px-4 py-4">
+      <div className="relative z-10 flex-1 flex items-center justify-center px-4 py-4">
         <AnimatePresence mode="wait">
           {currentCard && (
             <GameCard
@@ -383,7 +510,7 @@ function App() {
       </div>
 
       {/* Footer */}
-      <div className="pb-4 pt-2 text-center">
+      <div className="relative z-10 pb-4 pt-2 text-center">
         <p className="text-gray-600 text-xs">
           Свайпни карточку ← или → для выбора
         </p>

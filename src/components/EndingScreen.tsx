@@ -1,27 +1,30 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Stats } from '../types';
-import { endings } from '../data/storyData';
+import { endings, eras } from '../data/storyData';
 
 interface EndingScreenProps {
   stats: Stats;
   turn: number;
+  year?: number;
+  eraIndex?: number;
   onRestart: () => void;
 }
 
-const EndingScreen: React.FC<EndingScreenProps> = ({ stats, turn, onRestart }) => {
+const EndingScreen: React.FC<EndingScreenProps> = ({ stats, turn, year = 3000, eraIndex = 5, onRestart }) => {
   const ending = endings.find(e => e.condition(stats)) || endings[endings.length - 1];
+  const era = eras[eraIndex] || eras[eras.length - 1];
 
   return (
     <motion.div
-      className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-indigo-950 via-gray-900 to-black"
+      className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-indigo-950 via-gray-900 to-black relative overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1.5 }}
     >
       {/* Stars background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(50)].map((_, i) => (
+        {[...Array(60)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-white rounded-full"
@@ -48,13 +51,13 @@ const EndingScreen: React.FC<EndingScreenProps> = ({ stats, turn, onRestart }) =
         animate={{ scale: 1, y: 0 }}
         transition={{ type: 'spring', stiffness: 150, damping: 20, delay: 0.5 }}
       >
-        {/* Crown/Ending icon */}
+        {/* Era icon */}
         <motion.div
           className="text-7xl mb-4"
           animate={{ y: [0, -10, 0] }}
           transition={{ duration: 3, repeat: Infinity }}
         >
-          🏛️
+          {era.ambientEmoji}
         </motion.div>
 
         {/* Ending title */}
@@ -70,10 +73,18 @@ const EndingScreen: React.FC<EndingScreenProps> = ({ stats, turn, onRestart }) =
 
         {/* Subtitle */}
         <motion.p
-          className="text-gray-400 text-sm mb-6"
+          className="text-gray-400 text-sm mb-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
+        >
+          {era.name} • Год {year} от Р.Х.
+        </motion.p>
+        <motion.p
+          className="text-gray-500 text-xs mb-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.1 }}
         >
           Ты продержался {turn} ходов
         </motion.p>
