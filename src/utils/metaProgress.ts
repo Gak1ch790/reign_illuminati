@@ -10,6 +10,9 @@ const defaultProgress: MetaProgress = {
   collectedItems: [],
   seenDirectors: [],
   seenCards: [],
+  unlockedCards: [],
+  completedArcs: [],
+  branchChoices: {},
   endings: [],
   achievements: [],
 };

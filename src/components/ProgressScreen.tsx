@@ -70,26 +70,26 @@ const ProgressScreen: React.FC<ProgressScreenProps> = ({ progress, lastYear, las
 
         {/* Stats Grid */}
         <motion.div
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
+          className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <div className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-4">
-            <div className="text-3xl font-bold text-amber-400">{progress.totalGames}</div>
-            <div className="text-gray-400 text-xs mt-1">Игр сыграно</div>
+          <div className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-3 sm:p-4">
+            <div className="text-2xl sm:text-3xl font-bold text-amber-400">{progress.totalGames}</div>
+            <div className="text-gray-400 text-[10px] sm:text-xs mt-1">Игр сыграно</div>
           </div>
-          <div className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-4">
-            <div className="text-3xl font-bold text-amber-400">{progress.totalTurns}</div>
-            <div className="text-gray-400 text-xs mt-1">Всего ходов</div>
+          <div className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-3 sm:p-4">
+            <div className="text-2xl sm:text-3xl font-bold text-amber-400">{progress.totalTurns}</div>
+            <div className="text-gray-400 text-[10px] sm:text-xs mt-1">Всего ходов</div>
           </div>
-          <div className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-4">
-            <div className="text-3xl font-bold text-amber-400">{progress.highestYear}</div>
-            <div className="text-gray-400 text-xs mt-1">Макс. год</div>
+          <div className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-3 sm:p-4">
+            <div className="text-2xl sm:text-3xl font-bold text-amber-400">{progress.highestYear}</div>
+            <div className="text-gray-400 text-[10px] sm:text-xs mt-1">Макс. год</div>
           </div>
-          <div className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-4">
-            <div className="text-3xl font-bold text-amber-400">{progress.collectedItems.length}</div>
-            <div className="text-gray-400 text-xs mt-1">Реликвий</div>
+          <div className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-3 sm:p-4">
+            <div className="text-2xl sm:text-3xl font-bold text-amber-400">{progress.completedArcs.length}</div>
+            <div className="text-gray-400 text-[10px] sm:text-xs mt-1">Арок открыто</div>
           </div>
         </motion.div>
 

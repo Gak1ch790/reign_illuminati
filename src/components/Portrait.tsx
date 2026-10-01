@@ -371,6 +371,75 @@ const CorporationPortrait: React.FC = () => (
   </svg>
 );
 
+const MuskPortrait: React.FC = () => (
+  <svg viewBox="0 0 200 200" className="w-full h-full">
+    <rect width="200" height="200" fill="#0a1520" />
+    <path d="M50 200 L55 130 L80 115 L100 120 L120 115 L145 130 L150 200 Z" fill="#1a1a1a" stroke="#0d0a1a" strokeWidth="2.5" />
+    <ellipse cx="100" cy="95" rx="35" ry="40" fill="#e8d5b8" stroke="#0d0a1a" strokeWidth="2.5" />
+    <path d="M65 80 Q65 50 100 45 Q135 50 135 80" fill="#2a2a2a" stroke="#0d0a1a" strokeWidth="2" />
+    <ellipse cx="85" cy="90" rx="6" ry="5" fill="#0d0a1a" />
+    <ellipse cx="115" cy="90" rx="6" ry="5" fill="#0d0a1a" />
+    <circle cx="86" cy="89" r="2" fill="#fff" />
+    <circle cx="116" cy="89" r="2" fill="#fff" />
+    <path d="M85 115 Q100 120 115 115" fill="none" stroke="#0d0a1a" strokeWidth="2" strokeLinecap="round" />
+    <text x="100" y="170" textAnchor="middle" fill="#ffd700" fontSize="10" fontWeight="bold">MARS</text>
+  </svg>
+);
+
+const RickPortrait: React.FC = () => (
+  <svg viewBox="0 0 200 200" className="w-full h-full">
+    <rect width="200" height="200" fill="#1a2530" />
+    <path d="M50 200 L55 130 L80 115 L100 120 L120 115 L145 130 L150 200 Z" fill="#e8e8e8" stroke="#0d0a1a" strokeWidth="2.5" />
+    <ellipse cx="100" cy="95" rx="35" ry="40" fill="#e8d5b8" stroke="#0d0a1a" strokeWidth="2.5" />
+    <path d="M60 75 Q65 40 100 35 Q135 40 140 75" fill="#c0c0c0" stroke="#0d0a1a" strokeWidth="2" />
+    <path d="M70 50 Q80 30 90 40" fill="#c0c0c0" stroke="#0d0a1a" strokeWidth="1" />
+    <path d="M130 50 Q120 30 110 40" fill="#c0c0c0" stroke="#0d0a1a" strokeWidth="1" />
+    <ellipse cx="85" cy="90" rx="8" ry="6" fill="#fff" stroke="#0d0a1a" strokeWidth="1.5" />
+    <ellipse cx="115" cy="90" rx="8" ry="6" fill="#fff" stroke="#0d0a1a" strokeWidth="1.5" />
+    <circle cx="85" cy="90" r="3" fill="#4a90d9" />
+    <circle cx="115" cy="90" r="3" fill="#4a90d9" />
+    <path d="M85 110 Q90 115 95 110" fill="none" stroke="#0d0a1a" strokeWidth="2" strokeLinecap="round" />
+    <path d="M95 112 Q100 108 105 112" fill="none" stroke="#4aff4a" strokeWidth="1.5" strokeLinecap="round" />
+    <line x1="95" y1="112" x2="92" y2="118" stroke="#4aff4a" strokeWidth="1" />
+  </svg>
+);
+
+const MortyPortrait: React.FC = () => (
+  <svg viewBox="0 0 200 200" className="w-full h-full">
+    <rect width="200" height="200" fill="#202a15" />
+    <path d="M55 200 L60 135 L80 120 L100 125 L120 120 L140 135 L145 200 Z" fill="#ffff00" stroke="#0d0a1a" strokeWidth="2.5" />
+    <ellipse cx="100" cy="95" rx="32" ry="38" fill="#e8d5b8" stroke="#0d0a1a" strokeWidth="2.5" />
+    <path d="M68 80 Q70 50 100 45 Q130 50 132 80" fill="#c0a060" stroke="#0d0a1a" strokeWidth="2" />
+    <ellipse cx="85" cy="90" rx="9" ry="10" fill="#fff" stroke="#0d0a1a" strokeWidth="1.5" />
+    <ellipse cx="115" cy="90" rx="9" ry="10" fill="#fff" stroke="#0d0a1a" strokeWidth="1.5" />
+    <circle cx="85" cy="92" r="4" fill="#3a5a2a" />
+    <circle cx="115" cy="92" r="4" fill="#3a5a2a" />
+    <circle cx="86" cy="91" r="1.5" fill="#0d0a1a" />
+    <circle cx="116" cy="91" r="1.5" fill="#0d0a1a" />
+    <path d="M85 78 Q90 75 95 78" fill="none" stroke="#0d0a1a" strokeWidth="2" strokeLinecap="round" />
+    <path d="M105 78 Q110 75 115 78" fill="none" stroke="#0d0a1a" strokeWidth="2" strokeLinecap="round" />
+    <path d="M90 115 Q100 110 110 115" fill="none" stroke="#0d0a1a" strokeWidth="2" strokeLinecap="round" />
+  </svg>
+);
+
+const ZuckPortrait: React.FC = () => (
+  <svg viewBox="0 0 200 200" className="w-full h-full">
+    <rect width="200" height="200" fill="#0a2020" />
+    <path d="M50 200 L55 130 L80 115 L100 120 L120 115 L145 130 L150 200 Z" fill="#3a3a3a" stroke="#0d0a1a" strokeWidth="2.5" />
+    <ellipse cx="100" cy="95" rx="35" ry="40" fill="#8aaa8a" stroke="#0d0a1a" strokeWidth="2.5" />
+    <path d="M65 80 Q65 50 100 45 Q135 50 135 80" fill="#4a4a4a" stroke="#0d0a1a" strokeWidth="2" />
+    <ellipse cx="85" cy="90" rx="7" ry="6" fill="#ffff00" stroke="#0d0a1a" strokeWidth="1.5" />
+    <ellipse cx="115" cy="90" rx="7" ry="6" fill="#ffff00" stroke="#0d0a1a" strokeWidth="1.5" />
+    <ellipse cx="85" cy="90" rx="2" ry="5" fill="#0d0a1a" />
+    <ellipse cx="115" cy="90" rx="2" ry="5" fill="#0d0a1a" />
+    <line x1="95" y1="105" x2="95" y2="108" stroke="#0d0a1a" strokeWidth="1.5" />
+    <line x1="105" y1="105" x2="105" y2="108" stroke="#0d0a1a" strokeWidth="1.5" />
+    <path d="M88 115 Q100 118 112 115" fill="none" stroke="#0d0a1a" strokeWidth="2" strokeLinecap="round" />
+    <path d="M80 120 Q85 125 90 120" fill="#8aaa8a" stroke="#0d0a1a" strokeWidth="1" />
+    <path d="M110 120 Q115 125 120 120" fill="#8aaa8a" stroke="#0d0a1a" strokeWidth="1" />
+  </svg>
+);
+
 const Portrait: React.FC<PortraitProps> = ({ character, className }) => {
   const portraits: Record<string, React.FC> = {
     architect: ArchitectPortrait,
@@ -386,6 +455,10 @@ const Portrait: React.FC<PortraitProps> = ({ character, className }) => {
     reptilian: ReptilianPortrait,
     alien: AlienPortrait,
     corporation: CorporationPortrait,
+    musk: MuskPortrait,
+    rick: RickPortrait,
+    morty: MortyPortrait,
+    zuck: ZuckPortrait,
   };
 
   const SelectedPortrait = portraits[character] || ArchitectPortrait;

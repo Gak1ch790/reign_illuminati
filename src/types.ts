@@ -9,11 +9,10 @@ export interface Choice {
   text: string;
   effects: Partial<Stats>;
   itemReward?: string;
+  unlocksCard?: string; // ID карточки, которая разблокируется
+  unlocksArc?: string; // ID арки, которая разблокируется
+  spawnsCharacter?: string; // ID персонажа-пасхалки, который появится
   nextCardId?: string;
-  gameOver?: {
-    type: 'secrecy' | 'influence' | 'chaos' | 'funds';
-    direction: 'low' | 'high';
-  };
 }
 
 export interface Card {
@@ -24,19 +23,22 @@ export interface Card {
   leftChoice: Choice;
   rightChoice: Choice;
   arcId?: string;
+  arcStep?: number; // Позиция в арке
   era?: string;
-  yearRange?: [number, number]; // [minYear, maxYear]
+  yearRange?: [number, number];
   priority?: number;
-  conditions?: {
-    minStats?: Partial<Stats>;
-    maxStats?: Partial<Stats>;
-    requiredArc?: string;
+  isBranchPoint?: boolean; // Ключевая развилка
+  branchId?: string; // ID развилки для отслеживания выбора
+  unlockConditions?: {
     completedArcs?: string[];
-    requiredEra?: string;
-    requiredItem?: string;
-    requiredYear?: number;
-    maxYear?: number;
+    madeChoice?: { branchId: string; choice: 'left' | 'right' };
+    collectedItems?: string[];
+    minStats?: Partial<Stats>;
+    year?: number;
+    seenCards?: string[];
   };
+  isEasterEgg?: boolean; // Пасхалка
+  easterEggCharacter?: string; // Какой персонаж-пасхалка появляется
 }
 
 export interface Character {
@@ -44,9 +46,6 @@ export interface Character {
   name: string;
   title: string;
   color: string;
-  era?: string;
-  description?: string;
-  activeYears?: [number, number]; // Когда персонаж активен
 }
 
 export interface Era {
@@ -77,7 +76,7 @@ export interface Director {
   name: string;
   era: string;
   year: number;
-  yearEnd?: number; // Когда правление закончилось
+  yearEnd?: number;
   backstory: string;
   portrait: string;
   deathReason?: string;
@@ -91,6 +90,9 @@ export interface MetaProgress {
   collectedItems: string[];
   seenDirectors: string[];
   seenCards: string[];
+  unlockedCards: string[]; // Разблокированные карточки
+  completedArcs: string[]; // Выполненные арки (сохраняются между играми!)
+  branchChoices: Record<string, 'left' | 'right'>; // Сделанные выборы на развилках
   endings: string[];
   achievements: string[];
 }
@@ -107,7 +109,6 @@ export interface GameState {
   items: string[];
   gameOver: boolean;
   gameOverType?: string;
-  gameOverDirection?: string;
   directorIndex: number;
 }
 

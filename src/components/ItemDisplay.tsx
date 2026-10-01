@@ -10,9 +10,9 @@ const ItemDisplay: React.FC<ItemDisplayProps> = ({ items }) => {
   if (items.length === 0) return null;
 
   return (
-    <div className="w-full max-w-md mx-auto px-4 py-2">
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
-        <div className="text-gray-500 text-xs whitespace-nowrap">Реликвии:</div>
+    <div className="w-full max-w-md mx-auto px-2 sm:px-4 py-1 sm:py-2">
+      <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 sm:pb-2 scrollbar-hide">
+        <div className="text-gray-500 text-[10px] sm:text-xs whitespace-nowrap">Реликвии:</div>
         {items.map((item, index) => (
           <motion.div
             key={item.id}
@@ -22,7 +22,7 @@ const ItemDisplay: React.FC<ItemDisplayProps> = ({ items }) => {
             transition={{ delay: index * 0.1 }}
           >
             <div
-              className={`w-10 h-10 rounded-lg flex items-center justify-center text-xl cursor-help border-2 ${
+              className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center text-base sm:text-xl cursor-help border-2 ${
                 item.rarity === 'legendary'
                   ? 'bg-amber-900/50 border-amber-500/50'
                   : item.rarity === 'rare'
@@ -33,7 +33,6 @@ const ItemDisplay: React.FC<ItemDisplayProps> = ({ items }) => {
             >
               {item.icon}
             </div>
-            {/* Tooltip */}
             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50">
               <div className="bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs whitespace-nowrap shadow-xl">
                 <div className="text-white font-bold">{item.name}</div>
