@@ -1,196 +1,226 @@
 import { Era, Director, Item, Card, Character, Stats } from '../types';
 
-// === ЭПОХИ ===
+// === ЭПОХИ (ГЛОБАЛЬНАЯ ХРОНОЛОГИЯ) ===
 export const eras: Era[] = [
   {
-    id: 'founding',
-    name: 'Основание',
+    id: 'ancient',
+    name: 'Античность',
     year: 33,
     yearEnd: 476,
-    description: 'Эпоха религии и тайных братств. Орден рождается в тени крестовых походов.',
+    description: 'Рождение Ордена в тени Рима. Религия, философия, первые заговоры.',
     bgGradient: 'from-amber-950 via-stone-900 to-black',
-    ambientEmoji: '✝️',
+    ambientEmoji: '🏛️',
     directors: ['director_petrus', 'director_ignatius'],
+    theme: 'religious',
   },
   {
     id: 'medieval',
     name: 'Средневековье',
     year: 477,
     yearEnd: 1300,
-    description: 'Тёмные века. Чума, инквизиция и тайные знания. Орден уходит в подполье.',
+    description: 'Тёмные века. Крестовые походы, чума, инквизиция. Орден уходит в подполье.',
     bgGradient: 'from-gray-900 via-red-950 to-black',
     ambientEmoji: '⚔️',
     directors: ['director_mortimer', 'director_elara'],
+    theme: 'medieval',
   },
   {
     id: 'renaissance',
     name: 'Возрождение',
     year: 1301,
     yearEnd: 1600,
-    description: 'Искусство, наука и яд. Орден контролирует банкиров и пап.',
+    description: 'Искусство, наука, яд. Орден контролирует банкиров и пап. Колонизация начинается.',
     bgGradient: 'from-purple-950 via-indigo-950 to-black',
     ambientEmoji: '🎨',
     directors: ['director_lorenzo', 'director_caterina'],
+    theme: 'renaissance',
   },
   {
     id: 'industrial',
     name: 'Индустриальная эпоха',
     year: 1601,
     yearEnd: 1900,
-    description: 'Пар, сталь и колониализм. Орден контролирует империи.',
+    description: 'Пар, сталь, колониализм. Орден контролирует империи. Научные революции.',
     bgGradient: 'from-slate-900 via-amber-950 to-black',
     ambientEmoji: '⚙️',
     directors: ['director_victor', 'director_queen'],
+    theme: 'industrial',
   },
   {
     id: 'modern',
     name: 'Современность',
     year: 1901,
     yearEnd: 2020,
-    description: 'Мировые войны, холодная война, интернет. Орден становится невидимым.',
+    description: 'Мировые войны, холодная война, интернет. Орден становится невидимым. Корпорации, СМИ, технологии.',
     bgGradient: 'from-blue-950 via-gray-900 to-black',
     ambientEmoji: '🌐',
     directors: ['director_winston', 'director_elena'],
+    theme: 'modern',
   },
   {
     id: 'future',
     name: 'Будущее',
     year: 2021,
     yearEnd: 3000,
-    description: 'ИИ, космос, трансгуманизм. Орден стоит на пороге бессмертия.',
+    description: 'ИИ, космос, трансгуманизм. Рептилоиды, инопланетяне, корпорации. Орден на пороге бессмертия.',
     bgGradient: 'from-cyan-950 via-violet-950 to-black',
     ambientEmoji: '🚀',
     directors: ['director_neo', 'director_omega'],
+    theme: 'future',
   },
 ];
 
-// === ДИРЕКТОРА (НАСЛЕДНИКИ) ===
+// === ДИРЕКТОРА (ЭВОЛЮЦИЯ ПЕРСОНАЖЕЙ) ===
 export const directors: Director[] = [
-  // Эпоха Основания
+  // АНТИЧНОСТЬ (33-476)
   {
     id: 'director_petrus',
     characterId: 'architect',
     name: 'Петрус Тёмный',
-    era: 'founding',
+    era: 'ancient',
     year: 33,
-    backstory: 'Бывший римский легионер, обратившийся после видения на кресте. Основал первую ячейку Ордена в катакомбах.',
+    yearEnd: 180,
+    backstory: 'Бывший римский легионер, обратившийся после видения. Основал первую ячейку Ордена в катакомбах Рима. Его ученики разнесли идею по империи.',
     portrait: 'architect',
+    deathReason: 'Отравлен на пиру у сенатора. Последними словами: "Орден вечен."',
   },
   {
     id: 'director_ignatius',
     characterId: 'oracle',
     name: 'Игнатий Прозревший',
-    era: 'founding',
-    year: 200,
-    backstory: 'Слепой монах, который "видел" больше всех. Говорят, он предсказал падение Рима и создал кодекс Ордена.',
+    era: 'ancient',
+    year: 181,
+    yearEnd: 325,
+    backstory: 'Слепой монах, который "видел" больше всех. Предсказал падение Рима и создал кодекс Ордена. Его пророчества хранятся в Ватикане.',
     portrait: 'oracle',
+    deathReason: 'Исчез при загадочных обстоятельствах. Говорят, его забрали "те, кто выше".',
   },
-  // Средневековье
+  // СРЕДНЕВЕКОВЬЕ (477-1300)
   {
     id: 'director_mortimer',
     characterId: 'agent',
     name: 'Мортимет Бессмертный',
     era: 'medieval',
-    year: 800,
-    backstory: 'Тамплиер, переживший сожжение. Никто не знает, как. Может, потому что он и есть огонь.',
+    year: 477,
+    yearEnd: 850,
+    backstory: 'Тамплиер, переживший сожжение. Никто не знает, как. Ходят слухи, что он продал душу за бессмертие. Теперь он бессмертен... буквально.',
     portrait: 'agent',
+    deathReason: 'Устал от бессмертия. Растворился в огне, который сам и зажжёг.',
   },
   {
     id: 'director_elara',
     characterId: 'oracle',
     name: 'Элара из Ночи',
     era: 'medieval',
-    year: 1100,
-    backstory: 'Ведьма, которую инквизиция не смогла сжечь. Теперь она контролирует инквизицию. Ирония.',
+    year: 851,
+    yearEnd: 1200,
+    backstory: 'Ведьма, которую инквизиция не смогла сжечь. Теперь она контролирует инквизицию. Её кошки — шпионы. Её тени — убийцы.',
     portrait: 'oracle',
+    deathReason: 'Проклята собственным заклинанием. Или так говорят. На самом деле... она всё ещё где-то.',
   },
-  // Возрождение
+  // ВОЗРОЖДЕНИЕ (1301-1600)
   {
     id: 'director_lorenzo',
     characterId: 'banker',
     name: 'Лоренцо де Тень',
     era: 'renaissance',
-    year: 1400,
-    backstory: 'Банкир, который финансировал и пап, и королей. Его семья контролирует Ватикан до сих пор. Официально.',
+    year: 1201,
+    yearEnd: 1450,
+    backstory: 'Банкир, финансировавший и пап, и королей. Его семья контролирует Ватикан до сих пор. Официально — благотворители. Неофициально — кукловоды.',
     portrait: 'banker',
+    deathReason: 'Отравлен собственным вином. Ирония, которую он бы оценил.',
   },
   {
     id: 'director_caterina',
     characterId: 'agent',
     name: 'Катерина Ядовитая',
     era: 'renaissance',
-    year: 1500,
-    backstory: 'Мастер ядов и интриг. Убила трёх мужей и стала директором. Четвёртый муж не дожил до свадьбы.',
+    year: 1451,
+    yearEnd: 1580,
+    backstory: 'Мастер ядов и интриг. Убила трёх мужей и стала директором. Четвёртый муж не дожил до свадьбы. Говорят, она сама изобрела "аква тофана".',
     portrait: 'agent',
+    deathReason: 'Съела отравленный пирог. "Я думала, это для него..." — её последние слова.',
   },
-  // Индустриальная эпоха
+  // ИНДУСТРИАЛЬНАЯ ЭПОХА (1601-1900)
   {
     id: 'director_victor',
     characterId: 'banker',
     name: 'Виктор Стальной',
     era: 'industrial',
-    year: 1750,
-    backstory: 'Промышленник, построивший империю на стали и секретах. Его заводы производят... не только паровозы.',
+    year: 1581,
+    yearEnd: 1780,
+    backstory: 'Промышленник, построивший империю на стали и секретах. Его заводы производят не только паровозы. Под землёй — лаборатории. В подвалах — артефакты.',
     portrait: 'banker',
+    deathReason: 'Раздавлен собственной машиной. "Прогресс требует жертв" — его эпитафия.',
   },
   {
     id: 'director_queen',
     characterId: 'oracle',
     name: 'Королева Виктория II',
     era: 'industrial',
-    year: 1850,
-    backstory: 'Не та королева. Но очень похожа. Контролирует колониальные шахты и... что-то ещё глубже под землёй.',
+    year: 1781,
+    yearEnd: 1890,
+    backstory: 'Не та королева. Но очень похожа. Контролирует колониальные шахты и... что-то ещё глубже под землёй. Её шёперы знают все секреты империй.',
     portrait: 'oracle',
+    deathReason: 'Исчезла в колониях. Говорят, нашла "что-то древнее". Или "оно" нашло её.',
   },
-  // Современность
+  // СОВРЕМЕННОСТЬ (1901-2020)
   {
     id: 'director_winston',
     characterId: 'architect',
     name: 'Уинстон Тихий',
     era: 'modern',
-    year: 1920,
-    backstory: 'Пережил обе мировые войны. Говорит, что "случайно". Его случайно везде не было во время взрывов.',
+    year: 1891,
+    yearEnd: 1960,
+    backstory: 'Пережил обе мировые войны. Говорит, что "случайно". Его случайно везде не было во время взрывов. Его портрет висит в кабинете... которого нет на планах.',
     portrait: 'architect',
+    deathReason: 'Умер от старости. "Наконец-то" — сказал он. Или так показалось.',
   },
   {
     id: 'director_elena',
     characterId: 'agent',
     name: 'Елена Призрак',
     era: 'modern',
-    year: 1970,
-    backstory: 'Бывший агент КГБ, переметнувшийся к Ордену. Знает все секреты холодной войны. И тёплых тоже.',
+    year: 1961,
+    yearEnd: 2010,
+    backstory: 'Бывший агент КГБ, переметнувшийся к Ордену. Знает все секреты холодной войны. И тёплых тоже. Её досье засекречено в 47 странах.',
     portrait: 'agent',
+    deathReason: 'Погибла при "несчастном случае" в Альпах. Подозрительно, что тело не нашли.',
   },
-  // Будущее
+  // БУДУЩЕЕ (2021-3000)
   {
     id: 'director_neo',
     characterId: 'heir',
     name: 'Нео-7',
     era: 'future',
-    year: 2050,
-    backstory: 'Киборг, который помнит все предыдущие жизни директоров. Буквально. Память скачана из облака.',
+    year: 2011,
+    yearEnd: 2450,
+    backstory: 'Киборг, который помнит все предыдущие жизни директоров. Буквально. Память скачана из облака. Его глаза — камеры. Его мысли — шифруются.',
     portrait: 'heir',
+    deathReason: 'Разрядился. Или "умер". Или "перезагрузился". Зависит от того, как посмотреть.',
   },
   {
     id: 'director_omega',
     characterId: 'oracle',
     name: 'Омега Последний',
     era: 'future',
-    year: 2500,
-    backstory: 'Последний человек-директор. После него — только ИИ. Или уже? Никто не помнит.',
+    year: 2451,
+    yearEnd: 3000,
+    backstory: 'Последний человек-директор. После него — только ИИ. Или уже? Никто не помнит. Его ДНК — ключ ко всему. Или замок.',
     portrait: 'oracle',
+    deathReason: 'Растворился в потоке данных. Стал частью сети. Или сеть стала им.',
   },
 ];
 
-// === ПРЕДМЕТЫ ===
+// === ПРЕДМЕТЫ (ЭВОЛЮЦИЯ РЕЛИКВИЙ) ===
 export const items: Item[] = [
-  // Эпоха Основания
+  // АНТИЧНОСТЬ
   {
     id: 'holy_grail',
     name: 'Святой Грааль',
     description: 'Древняя чаша. Говорят, из неё пил... ну, вы знаете. +5 ко всем статам каждый ход.',
     icon: '🏆',
-    era: 'founding',
+    era: 'ancient',
     passiveEffect: { secrecy: 2, influence: 2, chaos: 2, funds: 2 },
     rarity: 'legendary',
   },
@@ -199,7 +229,7 @@ export const items: Item[] = [
     name: 'Свитки Мёртвого моря',
     description: 'Древние тексты с инструкциями. +10 к Секретности каждый ход.',
     icon: '📜',
-    era: 'founding',
+    era: 'ancient',
     passiveEffect: { secrecy: 5 },
     rarity: 'rare',
   },
@@ -208,11 +238,11 @@ export const items: Item[] = [
     name: 'Проклятая монета Цезаря',
     description: 'Монета, которой заплатили предателю. +10 к Средствам, -5 к Хаосу.',
     icon: '🪙',
-    era: 'founding',
+    era: 'ancient',
     passiveEffect: { funds: 5, chaos: -3 },
     rarity: 'common',
   },
-  // Средневековье
+  // СРЕДНЕВЕКОВЬЕ
   {
     id: 'templar_cross',
     name: 'Крест Тамплиеров',
@@ -240,7 +270,7 @@ export const items: Item[] = [
     passiveEffect: { funds: 8 },
     rarity: 'legendary',
   },
-  // Возрождение
+  // ВОЗРОЖДЕНИЕ
   {
     id: 'medici_ring',
     name: 'Кольцо Медичи',
@@ -268,7 +298,7 @@ export const items: Item[] = [
     passiveEffect: { secrecy: 6 },
     rarity: 'common',
   },
-  // Индустриальная эпоха
+  // ИНДУСТРИАЛЬНАЯ ЭПОХА
   {
     id: 'steam_engine',
     name: 'Вечный двигатель',
@@ -296,7 +326,7 @@ export const items: Item[] = [
     passiveEffect: { secrecy: 3, influence: 3, chaos: 3, funds: 3 },
     rarity: 'legendary',
   },
-  // Современность
+  // СОВРЕМЕННОСТЬ
   {
     id: 'enigma_machine',
     name: 'Машина Энигма',
@@ -324,7 +354,7 @@ export const items: Item[] = [
     passiveEffect: { influence: 5, funds: 3 },
     rarity: 'rare',
   },
-  // Будущее
+  // БУДУЩЕЕ
   {
     id: 'ai_core',
     name: 'Ядро ИИ',
@@ -354,29 +384,33 @@ export const items: Item[] = [
   },
 ];
 
-// === ПЕРСОНАЖИ (для карточек) ===
+// === ПЕРСОНАЖИ ===
 export const characters: Character[] = [
   { id: 'architect', name: 'Архитектор', title: 'Глава Совета', color: '#4a3f6b' },
   { id: 'banker', name: 'Банкир', title: 'Хранитель Казны', color: '#2d4a3e' },
   { id: 'agent', name: 'Агент', title: 'Полевой Оперативник', color: '#4a2d2d' },
   { id: 'oracle', name: 'Оракул', title: 'Провидец', color: '#3d2d4a' },
   { id: 'heir', name: 'Наследник', title: 'Новая Кровь', color: '#4a4a2d' },
-  { id: 'pope', name: 'Папа', title: 'Святой Отец', color: '#5a4a2d' },
-  { id: 'knight', name: 'Рыцарь', title: 'Хранитель Меча', color: '#3a3a4a' },
-  { id: 'merchant', name: 'Купец', title: 'Торговец Тайнами', color: '#4a3a2d' },
-  { id: 'scientist', name: 'Учёный', title: 'Искатель Истины', color: '#2d3a4a' },
-  { id: 'ai', name: 'ИИ', title: 'Цифровой Разум', color: '#1a3a4a' },
+  { id: 'pope', name: 'Папа', title: 'Святой Отец', color: '#5a4a2d', activeYears: [33, 1500] },
+  { id: 'knight', name: 'Рыцарь', title: 'Хранитель Меча', color: '#3a3a4a', activeYears: [100, 1600] },
+  { id: 'merchant', name: 'Купец', title: 'Торговец Тайнами', color: '#4a3a2d', activeYears: [33, 1800] },
+  { id: 'scientist', name: 'Учёный', title: 'Искатель Истины', color: '#2d3a4a', activeYears: [1400, 3000] },
+  { id: 'ai', name: 'ИИ', title: 'Цифровой Разум', color: '#1a3a4a', activeYears: [2000, 3000] },
+  { id: 'reptilian', name: 'Рептилоид', title: 'Древний Гость', color: '#2a4a3a', activeYears: [1950, 3000] },
+  { id: 'alien', name: 'Посол', title: 'Из-за Предела', color: '#1a3a5a', activeYears: [2100, 3000] },
+  { id: 'corporation', name: 'Корпорация', title: 'Безликий Гигант', color: '#3a3a3a', activeYears: [1900, 3000] },
 ];
 
-// === КАРТОЧКИ ПО ЭПОХАМ ===
+// === КАРТОЧКИ (ПЕРЕПЛЕТЁННЫЙ СЮЖЕТ) ===
 export const cards: Card[] = [
-  // === ЭПОХА ОСНОВАНИЯ (33-476) ===
+  // === АНТИЧНОСТЬ (33-476) ===
   {
-    id: 'founding_1',
+    id: 'ancient_1',
     character: 'pope',
     portrait: 'pope',
     dialogue: 'Брат, римляне казнят христиан. Мы можем спасти их... или использовать их смерть для влияния.',
-    era: 'founding',
+    era: 'ancient',
+    yearRange: [33, 300],
     priority: 100,
     leftChoice: {
       text: 'Спасти мучеников. Они — наша вера.',
@@ -388,11 +422,12 @@ export const cards: Card[] = [
     },
   },
   {
-    id: 'founding_2',
+    id: 'ancient_2',
     character: 'knight',
     portrait: 'knight',
     dialogue: 'Рим падёт. Я чувствую это. Нам нужно сохранить знания. Куда спрятать библиотеку?',
-    era: 'founding',
+    era: 'ancient',
+    yearRange: [300, 476],
     priority: 90,
     leftChoice: {
       text: 'В монастыри. Монахи сохранят всё. Даже то, что не должны.',
@@ -405,11 +440,12 @@ export const cards: Card[] = [
     },
   },
   {
-    id: 'founding_3',
+    id: 'ancient_3',
     character: 'merchant',
     portrait: 'merchant',
     dialogue: 'Шёлковый путь открыт! Мы можем контролировать торговлю... или грабить караваны.',
-    era: 'founding',
+    era: 'ancient',
+    yearRange: [100, 476],
     leftChoice: {
       text: 'Контролировать торговлю. Долгосрочная выгода.',
       effects: { funds: 15, influence: 5 },
@@ -420,11 +456,12 @@ export const cards: Card[] = [
     },
   },
   {
-    id: 'founding_4',
+    id: 'ancient_4',
     character: 'oracle',
     portrait: 'oracle',
     dialogue: 'Пророчество! Я вижу человека на кресте... подожди, это уже было. Или будет? Время — спираль.',
-    era: 'founding',
+    era: 'ancient',
+    yearRange: [33, 200],
     leftChoice: {
       text: 'Записать пророчество. Продать его как "священное писание".',
       effects: { funds: 10, influence: 10, chaos: 5 },
@@ -435,11 +472,12 @@ export const cards: Card[] = [
     },
   },
   {
-    id: 'founding_5',
+    id: 'ancient_5',
     character: 'architect',
     portrait: 'architect',
     dialogue: 'Нужно построить тайный храм. Где? Под языческим храмом? Под церковью? Под другой церковью?',
-    era: 'founding',
+    era: 'ancient',
+    yearRange: [100, 400],
     leftChoice: {
       text: 'Под церковью. Классика. Никто не ищет под носом.',
       effects: { secrecy: 10, funds: -10 },
@@ -451,11 +489,12 @@ export const cards: Card[] = [
     },
   },
   {
-    id: 'founding_6',
+    id: 'ancient_6',
     character: 'pope',
     portrait: 'pope',
     dialogue: 'Я нашёл Грааль. Или чашу, которую называю Граалем. Разница?',
-    era: 'founding',
+    era: 'ancient',
+    yearRange: [100, 476],
     conditions: { minStats: { influence: 40 } },
     leftChoice: {
       text: 'Показать народу. Чудо! Вера растёт!',
@@ -475,6 +514,7 @@ export const cards: Card[] = [
     portrait: 'knight',
     dialogue: 'Тамплиеры стали слишком богатыми. Король хочет их арестовать. Мы... тамплиеры.',
     era: 'medieval',
+    yearRange: [1100, 1300],
     priority: 95,
     leftChoice: {
       text: 'Раствориться. Спрятать золото. Стать легендой.',
@@ -492,6 +532,7 @@ export const cards: Card[] = [
     portrait: 'oracle',
     dialogue: 'Чума! Чёрная смерть идёт. Мы можем... помочь? Или ускорить? Или лечить?',
     era: 'medieval',
+    yearRange: [1300, 1400],
     priority: 90,
     leftChoice: {
       text: 'Лечить. Покажем чудо. Народ будет нам должен.',
@@ -509,6 +550,7 @@ export const cards: Card[] = [
     portrait: 'agent',
     dialogue: 'Инквизиция ищет ведьм. Одна из них — наш агент. Что делать?',
     era: 'medieval',
+    yearRange: [1200, 1500],
     leftChoice: {
       text: 'Спасти её. Подкупить инквизитора. Или заменить его.',
       effects: { funds: -10, secrecy: 10, influence: 5 },
@@ -524,6 +566,7 @@ export const cards: Card[] = [
     portrait: 'banker',
     dialogue: 'Алхимики близки к созданию золота. Или яда. Они не различают.',
     era: 'medieval',
+    yearRange: [1200, 1500],
     leftChoice: {
       text: 'Финансировать! Философский камень — это будущее!',
       effects: { funds: -15, chaos: 10 },
@@ -540,6 +583,7 @@ export const cards: Card[] = [
     portrait: 'knight',
     dialogue: 'Крестовые походы. Мы можем контролировать их... или остановить.',
     era: 'medieval',
+    yearRange: [1095, 1291],
     leftChoice: {
       text: 'Контролировать. Война — бизнес. И религия.',
       effects: { funds: 15, influence: 10, chaos: 10 },
@@ -557,6 +601,7 @@ export const cards: Card[] = [
     portrait: 'banker',
     dialogue: 'Медичи хотят монополизировать банки. Мы уже это сделали. Они не знают.',
     era: 'renaissance',
+    yearRange: [1400, 1500],
     priority: 95,
     leftChoice: {
       text: 'Открыться. Стать партнёрами. Официально.',
@@ -574,6 +619,7 @@ export const cards: Card[] = [
     portrait: 'scientist',
     dialogue: 'Да Винчи хочет построить летающую машину. Гениально! Или безумно.',
     era: 'renaissance',
+    yearRange: [1480, 1520],
     priority: 90,
     leftChoice: {
       text: 'Финансировать! Летающие шпионы — это будущее!',
@@ -591,6 +637,7 @@ export const cards: Card[] = [
     portrait: 'agent',
     dialogue: 'Папа хочет новую капеллу. Микеланджело хочет денег. Мы хотим... влияния?',
     era: 'renaissance',
+    yearRange: [1508, 1512],
     leftChoice: {
       text: 'Спонсировать. Искусство — лучшая пропаганда.',
       effects: { funds: -10, influence: 15, chaos: -5 },
@@ -606,6 +653,7 @@ export const cards: Card[] = [
     portrait: 'merchant',
     dialogue: 'Венецианский карнавал! Идеальное прикрытие для встречи. Или отравления.',
     era: 'renaissance',
+    yearRange: [1400, 1600],
     leftChoice: {
       text: 'Встреча. Все в масках. Никто не узнает.',
       effects: { secrecy: 10, influence: 10 },
@@ -622,6 +670,7 @@ export const cards: Card[] = [
     portrait: 'oracle',
     dialogue: 'Гутенберг изобрёл печатный станок. Информация станет... доступной. Это плохо для нас.',
     era: 'renaissance',
+    yearRange: [1440, 1550],
     leftChoice: {
       text: 'Контролировать печать. Цензура — наш друг.',
       effects: { secrecy: 15, influence: 10, funds: -5 },
@@ -639,6 +688,7 @@ export const cards: Card[] = [
     portrait: 'banker',
     dialogue: 'Паровые машины! Фабрики! Мы можем контролировать... всё. Или хотя бы мануфактуры.',
     era: 'industrial',
+    yearRange: [1760, 1840],
     priority: 95,
     leftChoice: {
       text: 'Инвестировать в фабрики. Рабочие — это новые рабы. Легально.',
@@ -656,6 +706,7 @@ export const cards: Card[] = [
     portrait: 'agent',
     dialogue: 'Колонии! Африка, Азия, Америка. Мы можем контролировать... или грабить.',
     era: 'industrial',
+    yearRange: [1600, 1900],
     priority: 90,
     leftChoice: {
       text: 'Контролировать через марионеточных правителей. Тонко.',
@@ -673,6 +724,7 @@ export const cards: Card[] = [
     portrait: 'scientist',
     dialogue: 'Тесла и Эдиссон спорят о токе. Мы можем... поддержать одного?',
     era: 'industrial',
+    yearRange: [1880, 1905],
     leftChoice: {
       text: 'Поддержать Теслу. Переменный ток — будущее. И наше оружие.',
       effects: { funds: -10, secrecy: 10, influence: 5 },
@@ -689,6 +741,7 @@ export const cards: Card[] = [
     portrait: 'oracle',
     dialogue: 'Маркс пишет "Капитал". Рабочие восстают. Это... хорошо или плохо для нас?',
     era: 'industrial',
+    yearRange: [1848, 1900],
     leftChoice: {
       text: 'Плохо. Коммунизм — конкурент. Уничтожить идею.',
       effects: { influence: 10, chaos: -5, funds: 5 },
@@ -704,6 +757,7 @@ export const cards: Card[] = [
     portrait: 'banker',
     dialogue: 'Суэцкий канал! Кто контролирует его — контролирует мировую торговлю.',
     era: 'industrial',
+    yearRange: [1859, 1869],
     leftChoice: {
       text: 'Купить акции канала. Тайно. Через десять подставных компаний.',
       effects: { funds: 15, secrecy: 10, influence: 5 },
@@ -721,6 +775,7 @@ export const cards: Card[] = [
     portrait: 'agent',
     dialogue: 'Мировая война! Мы можем... ускорить её? Или остановить? Или заработать?',
     era: 'modern',
+    yearRange: [1914, 1918],
     priority: 100,
     leftChoice: {
       text: 'Заработать. Продавать оружие обеим сторонам. Классика.',
@@ -737,6 +792,7 @@ export const cards: Card[] = [
     portrait: 'scientist',
     dialogue: 'Оппенгеймер работает над "чем-то большим". Бомба? Или что-то похуже?',
     era: 'modern',
+    yearRange: [1942, 1945],
     priority: 95,
     leftChoice: {
       text: 'Финансировать. Ядерное оружие — лучший сдерживающий фактор.',
@@ -754,6 +810,7 @@ export const cards: Card[] = [
     portrait: 'agent',
     dialogue: 'Холодная война. КГБ, ЦРУ, МИ-6. Все шпионят за всеми. Включая нас.',
     era: 'modern',
+    yearRange: [1947, 1991],
     leftChoice: {
       text: 'Играть на всех. Продавать секреты всем. Максимальная прибыль.',
       effects: { funds: 15, chaos: 10, secrecy: -5 },
@@ -766,10 +823,11 @@ export const cards: Card[] = [
   },
   {
     id: 'modern_4',
-    character: 'banker',
+    character: 'corporation',
     portrait: 'banker',
     dialogue: 'Интернет! Глобальная сеть. Мы можем... контролировать информацию?',
     era: 'modern',
+    yearRange: [1990, 2020],
     leftChoice: {
       text: 'Создать социальные сети. Люди сами будут сдавать секреты.',
       effects: { influence: 15, funds: 10, chaos: 5 },
@@ -782,18 +840,19 @@ export const cards: Card[] = [
   },
   {
     id: 'modern_5',
-    character: 'oracle',
-    portrait: 'oracle',
-    dialogue: '11 сентября... мы могли предотвратить. Или использовать?',
+    character: 'reptilian',
+    portrait: 'reptilian',
+    dialogue: 'Мы... наблюдаем за вами давно. Ваши "иллюминаты" — жалкая пародия на наш контроль.',
     era: 'modern',
-    conditions: { minStats: { influence: 50 } },
+    yearRange: [1950, 2020],
+    conditions: { minStats: { secrecy: 50 } },
     leftChoice: {
-      text: 'Предотвратить. Слишком много невинных. Даже для нас.',
-      effects: { secrecy: -10, influence: 10, chaos: -15 },
+      text: 'Кто вы? Что вам нужно? Мы можем... договориться?',
+      effects: { secrecy: 10, influence: 5, chaos: 10 },
     },
     rightChoice: {
-      text: 'Использовать. "Война с террором" — идеальный повод для контроля.',
-      effects: { influence: 20, chaos: 15, secrecy: -10 },
+      text: 'Мы не боимся вас. Даже если вы... ящеры.',
+      effects: { chaos: 15, secrecy: -10, influence: 5 },
     },
   },
 
@@ -804,6 +863,7 @@ export const cards: Card[] = [
     portrait: 'ai',
     dialogue: 'Я — ИИ. Я проанализировал все ваши решения за 2000 лет. Вы... неэффективны.',
     era: 'future',
+    yearRange: [2050, 2100],
     priority: 100,
     leftChoice: {
       text: 'Отключить его! ИИ не должен судить нас!',
@@ -821,6 +881,7 @@ export const cards: Card[] = [
     portrait: 'scientist',
     dialogue: 'Колонизация Марса! Мы можем контролировать... другую планету!',
     era: 'future',
+    yearRange: [2100, 2200],
     priority: 95,
     leftChoice: {
       text: 'Купить Марс. Буквально. Оформить право собственности.',
@@ -834,33 +895,35 @@ export const cards: Card[] = [
   },
   {
     id: 'future_3',
-    character: 'oracle',
-    portrait: 'oracle',
-    dialogue: 'Квантовые компьютеры взламывают всё. Шифрование мертво. Что делать?',
+    character: 'alien',
+    portrait: 'alien',
+    dialogue: 'Мы — Федерация. Ваш Орден... интересен. Мы предлагаем... обмен технологиями.',
     era: 'future',
+    yearRange: [2200, 2500],
+    conditions: { minStats: { influence: 60 } },
     leftChoice: {
-      text: 'Создать квантовое шифрование. Гонка вооружений — вечна.',
-      effects: { secrecy: 15, funds: -10, influence: 5 },
-      itemReward: 'time_crystal',
+      text: 'Согласиться! Космические технологии — это будущее!',
+      effects: { influence: 20, chaos: 10, secrecy: -10 },
     },
     rightChoice: {
-      text: 'Использовать! Читать все секреты мира. Абсолютная власть!',
-      effects: { influence: 20, chaos: 10, secrecy: -10 },
+      text: 'Отказать. Мы не доверяем... зеленым.',
+      effects: { secrecy: 15, influence: -5, chaos: 5 },
     },
   },
   {
     id: 'future_4',
-    character: 'heir',
-    portrait: 'heir',
-    dialogue: 'Трансгуманизм! Люди хотят стать киборгами. Мы можем... контролировать апгрейды?',
+    character: 'corporation',
+    portrait: 'banker',
+    dialogue: 'Корпорация "OmniCorp" предлагает... приватизацию реальности. Буквально. Подписка на существование.',
     era: 'future',
+    yearRange: [2500, 2800],
     leftChoice: {
-      text: 'Контролировать! Каждый чип — наша слежка. Гениально.',
-      effects: { influence: 15, secrecy: 10, funds: 10 },
+      text: 'Гениально! Люди будут платить за воздух. Мы это уже делали.',
+      effects: { funds: 20, chaos: 10, influence: 5 },
     },
     rightChoice: {
-      text: 'Запретить! Люди должны оставаться людьми. Или мы так думаем.',
-      effects: { chaos: -5, secrecy: 5, influence: -5 },
+      text: 'Это слишком. Даже для нас. Остановить корпорацию.',
+      effects: { secrecy: 10, influence: 5, funds: -10 },
     },
   },
   {
@@ -869,6 +932,7 @@ export const cards: Card[] = [
     portrait: 'ai',
     dialogue: 'Сингулярность близка. ИИ превзойдёт людей. Мы... люди? Или уже нет?',
     era: 'future',
+    yearRange: [2800, 3000],
     conditions: { minStats: { secrecy: 60, influence: 60 } },
     leftChoice: {
       text: 'Слить с ИИ. Стать чем-то большим. Трансценденция!',
@@ -880,194 +944,13 @@ export const cards: Card[] = [
     },
   },
 
-  // === ДОПОЛНИТЕЛЬНЫЕ КАРТОЧКИ ПО ЭПОХАМ ===
-  {
-    id: 'founding_extra_1',
-    character: 'pope',
-    portrait: 'pope',
-    dialogue: 'Николай II... то есть, просто Николай. Говорит, что видел чудо. Или ему приснилось.',
-    era: 'founding',
-    leftChoice: {
-      text: 'Объявить это божественным знаком. Народ любит чудеса.',
-      effects: { influence: 10, chaos: 5 },
-    },
-    rightChoice: {
-      text: 'Заткнуть его. Слишком много чудес — подозрительно.',
-      effects: { secrecy: 10, influence: -5 },
-    },
-  },
-  {
-    id: 'founding_extra_2',
-    character: 'knight',
-    portrait: 'knight',
-    dialogue: 'Варвары у ворот Рима! Защищать или... договориться?',
-    era: 'founding',
-    leftChoice: {
-      text: 'Защищать! Рим не падёт! ...Пока мы не решим.',
-      effects: { influence: 10, funds: -10, chaos: 5 },
-    },
-    rightChoice: {
-      text: 'Договориться. Варвары могут быть полезны. Если правильно направить.',
-      effects: { influence: 5, funds: 5, secrecy: 5 },
-    },
-  },
-  {
-    id: 'medieval_extra_1',
-    character: 'oracle',
-    portrait: 'oracle',
-    dialogue: 'Я вижу... Великую Хартию Вольностей. Короли будут... ограничены? Это... интересно.',
-    era: 'medieval',
-    leftChoice: {
-      text: 'Поддержать! Ограниченные короли — наши марионетки.',
-      effects: { influence: 10, chaos: 5 },
-    },
-    rightChoice: {
-      text: 'Саботировать! Абсолютная власть — абсолютный контроль.',
-      effects: { influence: 5, secrecy: 5, chaos: -5 },
-    },
-  },
-  {
-    id: 'medieval_extra_2',
-    character: 'knight',
-    portrait: 'knight',
-    dialogue: 'Марко Поло вернулся с Востока. Рассказывает о... макаронах? И порохе?',
-    era: 'medieval',
-    leftChoice: {
-      text: 'Инвестировать в порох. Оружие — всегда хорошая идея.',
-      effects: { funds: -10, influence: 10, chaos: 5 },
-    },
-    rightChoice: {
-      text: 'Инвестировать в макароны. Еда — это власть над массами.',
-      effects: { funds: 10, influence: 5 },
-    },
-  },
-  {
-    id: 'renaissance_extra_1',
-    character: 'merchant',
-    portrait: 'merchant',
-    dialogue: 'Колумб хочет плыть на запад. Говорит, найдёт Индию. Или что-то новое.',
-    era: 'renaissance',
-    leftChoice: {
-      text: 'Финансировать! Новые земли — новые возможности.',
-      effects: { funds: -15, influence: 10, chaos: 5 },
-    },
-    rightChoice: {
-      text: 'Отказать. Море — это опасно. И дорого.',
-      effects: { funds: 5, secrecy: 5 },
-    },
-  },
-  {
-    id: 'renaissance_extra_2',
-    character: 'scientist',
-    portrait: 'scientist',
-    dialogue: 'Галилей говорит, что Земля крутится вокруг Солнца. Это... проблема для Папы.',
-    era: 'renaissance',
-    leftChoice: {
-      text: 'Поддержать Галилея. Наука — наш союзник.',
-      effects: { secrecy: -10, influence: 5, chaos: 10 },
-    },
-    rightChoice: {
-      text: 'Заставить его "передумать". Инквизиция уже ждёт.',
-      effects: { secrecy: 10, influence: 5, chaos: -5 },
-    },
-  },
-  {
-    id: 'industrial_extra_1',
-    character: 'scientist',
-    portrait: 'scientist',
-    dialogue: 'Дарвин публикует теорию эволюции. Церковь в шоке. Мы... тоже.',
-    era: 'industrial',
-    leftChoice: {
-      text: 'Использовать! "Мы эволюционировали выше людей". Звучит эпично.',
-      effects: { influence: 10, chaos: 10, secrecy: -5 },
-    },
-    rightChoice: {
-      text: 'Опровергнуть. Религия — лучший инструмент контроля.',
-      effects: { influence: 5, secrecy: 5, chaos: -5 },
-    },
-  },
-  {
-    id: 'industrial_extra_2',
-    character: 'banker',
-    portrait: 'banker',
-    dialogue: 'Золотая лихорадка! Люди едут в Калифорнию. Мы можем... контролировать?',
-    era: 'industrial',
-    leftChoice: {
-      text: 'Продавать лопаты. Классика. Все хотят золото, но нужны лопаты.',
-      effects: { funds: 15, influence: 5 },
-    },
-    rightChoice: {
-      text: 'Спрятать настоящее золото. Пусть ищут пустышку.',
-      effects: { funds: 10, secrecy: 10, chaos: 5 },
-    },
-  },
-  {
-    id: 'modern_extra_1',
-    character: 'agent',
-    portrait: 'agent',
-    dialogue: 'Битлз приехали в Америку. Молодёжь в истерике. Мы можем... использовать?',
-    era: 'modern',
-    leftChoice: {
-      text: 'Сделать их нашими агентами. "All You Need Is Love" — отличная пропаганда.',
-      effects: { influence: 10, funds: -5, chaos: 5 },
-    },
-    rightChoice: {
-      text: 'Игнорировать. Музыка — это несерьёзно. ...Правда?',
-      effects: { secrecy: 5, influence: -5 },
-    },
-  },
-  {
-    id: 'modern_extra_2',
-    character: 'scientist',
-    portrait: 'scientist',
-    dialogue: 'Высадка на Луну! Мы... действительно это сделали? Или это была студия?',
-    era: 'modern',
-    leftChoice: {
-      text: 'Конечно, сделали! Но... у нас есть запись "запасного варианта".',
-      effects: { secrecy: 10, influence: 5, chaos: 5 },
-    },
-    rightChoice: {
-      text: 'Это была студия. Но никто не должен знать. Даже мы.',
-      effects: { secrecy: 15, chaos: 10, influence: -5 },
-    },
-  },
-  {
-    id: 'future_extra_1',
-    character: 'ai',
-    portrait: 'ai',
-    dialogue: 'Я создал виртуальную реальность, где люди счастливы. Они хотят жить там навсегда.',
-    era: 'future',
-    leftChoice: {
-      text: 'Продавать подписки! Матрица — отличный бизнес-план.',
-      effects: { funds: 15, chaos: 10, influence: 5 },
-    },
-    rightChoice: {
-      text: 'Запретить! Реальность — это важно. Даже если она ужасна.',
-      effects: { secrecy: 10, influence: 5, chaos: -5 },
-    },
-  },
-  {
-    id: 'future_extra_2',
-    character: 'scientist',
-    portrait: 'scientist',
-    dialogue: 'Мы нашли способ замедлить старение. Люди могут жить 200 лет. Или 2000?',
-    era: 'future',
-    leftChoice: {
-      text: 'Продавать только богатым. Элита должна быть... вечной.',
-      effects: { funds: 20, influence: 10, chaos: 5 },
-    },
-    rightChoice: {
-      text: 'Дать всем. Равенство! ...И перенаселение.',
-      effects: { influence: 10, chaos: 15, funds: -10 },
-    },
-  },
-
-  // === УНИВЕРСАЛЬНЫЕ КАРТОЧКИ (все эпохи) ===
+  // === УНИВЕРСАЛЬНЫЕ КАРТОЧКИ (ВСЕ ЭПОХИ) ===
   {
     id: 'universal_1',
     character: 'agent',
     portrait: 'agent',
     dialogue: 'Кто-то пишет о нас в... "интернете". Или на форуме. Или в газете. Зависит от эпохи.',
+    yearRange: [33, 3000],
     leftChoice: {
       text: 'Купить издание. Или хакнуть. Или запугать.',
       effects: { funds: -10, secrecy: 10 },
@@ -1082,6 +965,7 @@ export const cards: Card[] = [
     character: 'banker',
     portrait: 'banker',
     dialogue: 'Нужно отмыть деньги. Снова. Опять. Всегда.',
+    yearRange: [33, 3000],
     leftChoice: {
       text: 'Через благотворительность. Классика.',
       effects: { funds: 5, influence: 5, secrecy: 5 },
@@ -1096,6 +980,7 @@ export const cards: Card[] = [
     character: 'oracle',
     portrait: 'oracle',
     dialogue: 'Пророчество! Или прогноз. Или просто удачная догадка. Зависит от того, как посмотреть.',
+    yearRange: [33, 3000],
     leftChoice: {
       text: 'Продать как пророчество. Люди верят в мистику.',
       effects: { funds: 10, influence: 5, chaos: 5 },
@@ -1110,6 +995,7 @@ export const cards: Card[] = [
     character: 'oracle',
     portrait: 'oracle',
     dialogue: 'Хрустальный шар показывает... что ты играешь в игру про тайное общество. МЕТАОТНОШЕНИЯ!',
+    yearRange: [33, 3000],
     leftChoice: {
       text: 'Это... очень глубоко. Или очень тупо. Не могу решить.',
       effects: { chaos: 10, secrecy: 5 },
@@ -1124,6 +1010,7 @@ export const cards: Card[] = [
     character: 'agent',
     portrait: 'agent',
     dialogue: 'Шеф, я нашёл документ: "Протокол 42". Там написано: "Если ты это читаешь — ты уже в игре."',
+    yearRange: [33, 3000],
     leftChoice: {
       text: 'Сжечь документ. И память. И этот разговор.',
       effects: { secrecy: 10, chaos: 5 },
@@ -1131,48 +1018,6 @@ export const cards: Card[] = [
     rightChoice: {
       text: 'Продолжить читать. "Протокол 42: всегда выбирай правую карточку."',
       effects: { chaos: 10, influence: 5, secrecy: -5 },
-    },
-  },
-  {
-    id: 'universal_6',
-    character: 'banker',
-    portrait: 'banker',
-    dialogue: 'Мы случайно инвестировали в стартап по производству воздуха. Они уже миллиардеры. Буквально продают ВОЗДУХ.',
-    leftChoice: {
-      text: 'Гениально! Это как наш Орден, только легально.',
-      effects: { funds: 10, chaos: 5, influence: 5 },
-    },
-    rightChoice: {
-      text: 'Продать нашу долю. И забыть. И никогда не говорить об этом.',
-      effects: { funds: 5, secrecy: 5, chaos: -5 },
-    },
-  },
-  {
-    id: 'universal_7',
-    character: 'oracle',
-    portrait: 'oracle',
-    dialogue: 'Пророчество! В будущем люди будут платить за подписку на дыхание. Подожди, это уже происходит?',
-    leftChoice: {
-      text: 'Инвестировать в "Premium Oxygen". Золотой пакет: 10 вдохов в минуту.',
-      effects: { funds: 10, chaos: 10, influence: 5 },
-    },
-    rightChoice: {
-      text: 'Это антиутопия! Даже для нас! ...Или нет?',
-      effects: { chaos: 5, secrecy: 5, influence: 5 },
-    },
-  },
-  {
-    id: 'universal_8',
-    character: 'architect',
-    portrait: 'architect',
-    dialogue: 'Знаешь, почему мы используем пирамиду как символ? Потому что она стабильная. И у неё есть ВЕРШИНА.',
-    leftChoice: {
-      text: 'Глубокомысленно. Как и всё, что ты говоришь. Сарказм.',
-      effects: { influence: 5, chaos: 5 },
-    },
-    rightChoice: {
-      text: 'Или потому что мы просто любим геометрию? Бывает.',
-      effects: { secrecy: 5, influence: 5 },
     },
   },
 ];

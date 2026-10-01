@@ -1,7 +1,8 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Stats, Card, Choice, GameScreen, Director, Era, Item } from './types';
+import { Stats, Card, Choice, GameScreen, Director, Era, Item, MetaProgress } from './types';
 import { cards, characters, eras, directors, items } from './data/storyData';
+import { loadMetaProgress, updateMetaProgress, checkAchievements } from './utils/metaProgress';
 import GameCard from './components/GameCard';
 import StatBars from './components/StatBars';
 import GameOverScreen from './components/GameOverScreen';
@@ -9,6 +10,7 @@ import EndingScreen from './components/EndingScreen';
 import HeirScreen from './components/HeirScreen';
 import ItemGetScreen from './components/ItemGetScreen';
 import ItemDisplay from './components/ItemDisplay';
+import ProgressScreen from './components/ProgressScreen';
 
 const INITIAL_STATS: Stats = {
   secrecy: 50,
@@ -17,7 +19,7 @@ const INITIAL_STATS: Stats = {
   funds: 50,
 };
 
-const MAX_TURNS_PER_DIRECTOR = 15; // Ходов на одного директора
+const MAX_TURNS_PER_DIRECTOR = 15;
 
 interface StatChange {
   key: keyof Stats;
@@ -77,7 +79,10 @@ function App() {
   const [statChanges, setStatChanges] = useState<StatChange[]>([]);
   const changeIdRef = useRef(0);
   
-  // Новые состояния для эпох и наследников
+  // Мета-прогрессия
+  const [metaProgress, setMetaProgress] = useState<MetaProgress>(loadMetaProgress());
+  
+  // Глобальная хронология (не сбрасывается!)
   const [currentEraIndex, setCurrentEraIndex] = useState(0);
   const [currentDirectorIndex, setCurrentDirectorIndex] = useState(0);
   const [currentYear, setCurrentYear] = useState(33);
@@ -92,12 +97,18 @@ function App() {
     return directors.find(d => d.id === directorId) || directors[0];
   };
 
-  const getNextCard = useCallback((currentStats: Stats, currentHistory: string[], currentArcs: string[], currentEra: string, collectedItemsList: string[]): Card => {
+  const getNextCard = useCallback((currentStats: Stats, currentHistory: string[], currentArcs: string[], currentEra: string, currentYear: number, collectedItemsList: string[]): Card => {
     const availableCards = cards.filter(card => {
       if (currentHistory.includes(card.id)) return false;
 
       // Проверка эпохи
       if (card.era && card.era !== currentEra) return false;
+
+      // Проверка диапазона годов
+      if (card.yearRange) {
+        const [minYear, maxYear] = card.yearRange;
+        if (currentYear < minYear || currentYear > maxYear) return false;
+      }
 
       // Проверка условий
       if (card.conditions) {
@@ -121,7 +132,7 @@ function App() {
     });
 
     if (availableCards.length === 0) {
-      // Если нет карточек для текущей эпохи, берём универсальные
+      // Если нет карточек для текущей эпохи/года, берём универсальные
       const universalCards = cards.filter(c => !c.era && !currentHistory.includes(c.id));
       if (universalCards.length > 0) {
         return universalCards[Math.floor(Math.random() * universalCards.length)];
@@ -145,19 +156,33 @@ function App() {
     setHistory([]);
     setCompletedArcs([]);
     setGameOverType('');
-    setCurrentEraIndex(0);
-    setCurrentDirectorIndex(0);
-    setCurrentYear(33);
     setCollectedItems([]);
     setPendingItem(null);
     setPreviousDirector(null);
-    setScreen('heir'); // Показываем первого директора
+    
+    // НЕ сбрасываем эпоху и год — продолжаем глобальный сюжет
+    // Но если это первая игра, начинаем с начала
+    if (metaProgress.totalGames === 0) {
+      setCurrentEraIndex(0);
+      setCurrentDirectorIndex(0);
+      setCurrentYear(33);
+    }
+    
+    setScreen('heir');
+  };
+
+  const startNewGameFromBeginning = () => {
+    // Полностью сбросить всё
+    setCurrentEraIndex(0);
+    setCurrentDirectorIndex(0);
+    setCurrentYear(33);
+    startGame();
   };
 
   const startGameplay = () => {
     setScreen('game');
     const era = getCurrentEra();
-    const nextCard = getNextCard(INITIAL_STATS, [], [], era.id, []);
+    const nextCard = getNextCard(INITIAL_STATS, [], [], era.id, currentYear, []);
     setCurrentCard(nextCard);
     setCardKey(prev => prev + 1);
   };
@@ -199,8 +224,8 @@ function App() {
     setTotalTurns(prev => prev + 1);
     setHistory(prev => [...prev, currentCard?.id || '']);
 
-    // Обновляем год
-    setCurrentYear(prev => prev + Math.floor(Math.random() * 5) + 1);
+    // Обновляем год (прогрессия времени)
+    setCurrentYear(prev => prev + Math.floor(Math.random() * 3) + 1);
 
     // Проверяем получение предмета
     if (choice.itemReward && !collectedItems.includes(choice.itemReward)) {
@@ -225,6 +250,21 @@ function App() {
     if (gameOverCheck) {
       playGameOverSound();
       setGameOverType(gameOverCheck);
+      
+      // Обновляем мета-прогрессию
+      const updatedProgress = updateMetaProgress({
+        totalGames: metaProgress.totalGames + 1,
+        totalTurns: metaProgress.totalTurns + totalTurns + 1,
+        highestYear: Math.max(metaProgress.highestYear, currentYear),
+        collectedItems: Array.from(new Set([...metaProgress.collectedItems, ...collectedItems])),
+        seenDirectors: Array.from(new Set([...metaProgress.seenDirectors, getCurrentDirector().id])),
+        seenCards: Array.from(new Set([...metaProgress.seenCards, ...history, currentCard?.id || ''])),
+      });
+      
+      // Проверяем достижения
+      checkAchievements(updatedProgress);
+      setMetaProgress(updatedProgress);
+      
       setScreen('gameover');
       return;
     }
@@ -237,7 +277,7 @@ function App() {
 
     // Получаем следующую карточку
     const era = getCurrentEra();
-    const nextCard = getNextCard(newStats, [...history, currentCard?.id || ''], completedArcs, era.id, collectedItems);
+    const nextCard = getNextCard(newStats, [...history, currentCard?.id || ''], completedArcs, era.id, currentYear, collectedItems);
     setCurrentCard(nextCard);
     setCardKey(prev => prev + 1);
   };
@@ -249,6 +289,13 @@ function App() {
     // Если прошли всех директоров в эпохе, переходим к следующей эпохе
     if (nextDirectorIndex === 0) {
       const nextEraIndex = (currentEraIndex + 1) % eras.length;
+      
+      // Обновляем мета-прогрессию
+      const updatedProgress = updateMetaProgress({
+        completedEras: Array.from(new Set([...metaProgress.completedEras, era.id])),
+      });
+      setMetaProgress(updatedProgress);
+      
       if (nextEraIndex === 0) {
         // Цикл завершён — концовка
         setScreen('ending');
@@ -270,7 +317,7 @@ function App() {
     setScreen('game');
     
     const era = getCurrentEra();
-    const nextCard = getNextCard(stats, history, completedArcs, era.id, collectedItems);
+    const nextCard = getNextCard(stats, history, completedArcs, era.id, currentYear, collectedItems);
     setCurrentCard(nextCard);
     setCardKey(prev => prev + 1);
   };
@@ -285,6 +332,14 @@ function App() {
     if (currentStats.funds <= 0) return 'funds_low';
     if (currentStats.funds >= 100) return 'funds_high';
     return null;
+  };
+
+  const handleGameOverContinue = () => {
+    setScreen('progress');
+  };
+
+  const handleProgressContinue = () => {
+    startNewGameFromBeginning();
   };
 
   // Title Screen
@@ -357,6 +412,21 @@ function App() {
             ПОРЯДКА
           </h2>
 
+          {metaProgress.totalGames > 0 && (
+            <motion.div
+              className="mb-6 bg-gray-800/50 border border-gray-700/50 rounded-xl p-4 max-w-xs mx-auto"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <div className="text-gray-400 text-xs mb-2">Ваш прогресс:</div>
+              <div className="flex justify-between text-sm">
+                <span className="text-amber-400">{metaProgress.totalGames} игр</span>
+                <span className="text-amber-400">{metaProgress.highestYear} год</span>
+              </div>
+            </motion.div>
+          )}
+
           <motion.p
             className="text-gray-400 text-sm max-w-xs mx-auto mb-8 leading-relaxed"
             initial={{ opacity: 0 }}
@@ -375,7 +445,7 @@ function App() {
             transition={{ delay: 0.8 }}
             whileHover={{ boxShadow: '0 0 30px rgba(217, 119, 6, 0.3)' }}
           >
-            ▶ НАЧАТЬ ИГРУ
+            ▶ {metaProgress.totalGames > 0 ? 'ПРОДОЛЖИТЬ' : 'НАЧАТЬ ИГРУ'}
           </motion.button>
 
           <motion.div
@@ -433,12 +503,24 @@ function App() {
 
   // Game Over Screen
   if (screen === 'gameover') {
-    return <GameOverScreen type={gameOverType} onRestart={startGame} />;
+    return <GameOverScreen type={gameOverType} onContinue={handleGameOverContinue} />;
+  }
+
+  // Progress Screen
+  if (screen === 'progress') {
+    return (
+      <ProgressScreen
+        progress={metaProgress}
+        lastYear={currentYear}
+        lastEra={getCurrentEra().id}
+        onContinue={handleProgressContinue}
+      />
+    );
   }
 
   // Ending Screen
   if (screen === 'ending') {
-    return <EndingScreen stats={stats} turn={totalTurns} year={currentYear} eraIndex={currentEraIndex} onRestart={startGame} />;
+    return <EndingScreen stats={stats} turn={totalTurns} year={currentYear} eraIndex={currentEraIndex} onRestart={startNewGameFromBeginning} />;
   }
 
   // Game Screen

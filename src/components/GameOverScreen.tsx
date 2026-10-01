@@ -4,10 +4,10 @@ import { gameOverMessages } from '../data/storyData';
 
 interface GameOverScreenProps {
   type: string;
-  onRestart: () => void;
+  onContinue: () => void;
 }
 
-const GameOverScreen: React.FC<GameOverScreenProps> = ({ type, onRestart }) => {
+const GameOverScreen: React.FC<GameOverScreenProps> = ({ type, onContinue }) => {
   const message = gameOverMessages[type] || gameOverMessages['secrecy_low'];
   
   const getAnimationVariant = () => {
@@ -173,10 +173,10 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ type, onRestart }) => {
           transition={{ delay: 1.3 }}
         >
           <button
-            onClick={onRestart}
+            onClick={onContinue}
             className="bg-amber-600 hover:bg-amber-500 active:bg-amber-700 text-white font-bold py-3 px-8 rounded-xl text-lg transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg shadow-amber-900/50"
           >
-            ↻ Начать заново
+            → Продолжить
           </button>
         </motion.div>
 

@@ -8,7 +8,7 @@ export interface Stats {
 export interface Choice {
   text: string;
   effects: Partial<Stats>;
-  itemReward?: string; // ID предмета, который можно получить
+  itemReward?: string;
   nextCardId?: string;
   gameOver?: {
     type: 'secrecy' | 'influence' | 'chaos' | 'funds';
@@ -24,7 +24,8 @@ export interface Card {
   leftChoice: Choice;
   rightChoice: Choice;
   arcId?: string;
-  era?: string; // Эпоха, в которой доступна карточка
+  era?: string;
+  yearRange?: [number, number]; // [minYear, maxYear]
   priority?: number;
   conditions?: {
     minStats?: Partial<Stats>;
@@ -33,6 +34,8 @@ export interface Card {
     completedArcs?: string[];
     requiredEra?: string;
     requiredItem?: string;
+    requiredYear?: number;
+    maxYear?: number;
   };
 }
 
@@ -43,6 +46,7 @@ export interface Character {
   color: string;
   era?: string;
   description?: string;
+  activeYears?: [number, number]; // Когда персонаж активен
 }
 
 export interface Era {
@@ -53,7 +57,8 @@ export interface Era {
   description: string;
   bgGradient: string;
   ambientEmoji: string;
-  directors: string[]; // IDs персонажей-директоров этой эпохи
+  directors: string[];
+  theme: 'religious' | 'medieval' | 'renaissance' | 'industrial' | 'modern' | 'future';
 }
 
 export interface Item {
@@ -62,7 +67,7 @@ export interface Item {
   description: string;
   icon: string;
   era?: string;
-  passiveEffect?: Partial<Stats>; // Пассивный эффект каждый ход
+  passiveEffect?: Partial<Stats>;
   rarity: 'common' | 'rare' | 'legendary';
 }
 
@@ -72,8 +77,22 @@ export interface Director {
   name: string;
   era: string;
   year: number;
+  yearEnd?: number; // Когда правление закончилось
   backstory: string;
   portrait: string;
+  deathReason?: string;
+}
+
+export interface MetaProgress {
+  totalGames: number;
+  totalTurns: number;
+  highestYear: number;
+  completedEras: string[];
+  collectedItems: string[];
+  seenDirectors: string[];
+  seenCards: string[];
+  endings: string[];
+  achievements: string[];
 }
 
 export interface GameState {
@@ -85,11 +104,11 @@ export interface GameState {
   currentEra: string;
   history: string[];
   completedArcs: string[];
-  items: string[]; // IDs полученных предметов
+  items: string[];
   gameOver: boolean;
   gameOverType?: string;
   gameOverDirection?: string;
-  directorIndex: number; // Какой директор сейчас
+  directorIndex: number;
 }
 
-export type GameScreen = 'title' | 'game' | 'gameover' | 'ending' | 'heir' | 'item_get';
+export type GameScreen = 'title' | 'game' | 'gameover' | 'ending' | 'heir' | 'item_get' | 'progress';

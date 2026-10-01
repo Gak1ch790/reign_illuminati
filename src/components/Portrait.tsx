@@ -302,6 +302,75 @@ const AIPortrait: React.FC = () => (
   </svg>
 );
 
+const ReptilianPortrait: React.FC = () => (
+  <svg viewBox="0 0 200 200" className="w-full h-full">
+    <rect width="200" height="200" fill="#0a2015" />
+    {/* Body - suit */}
+    <path d="M50 200 L55 130 L80 115 L100 120 L120 115 L145 130 L150 200 Z" fill="#1a1a1a" stroke="#0d0a1a" strokeWidth="2.5" />
+    {/* Face - reptilian */}
+    <ellipse cx="100" cy="95" rx="35" ry="42" fill="#2a5a3a" stroke="#0d0a1a" strokeWidth="2.5" />
+    {/* Scales pattern */}
+    <circle cx="85" cy="85" r="3" fill="#1a3a2a" opacity="0.5" />
+    <circle cx="115" cy="85" r="3" fill="#1a3a2a" opacity="0.5" />
+    <circle cx="100" cy="75" r="3" fill="#1a3a2a" opacity="0.5" />
+    {/* Eyes - vertical pupils */}
+    <ellipse cx="85" cy="90" rx="8" ry="10" fill="#ffff00" stroke="#0d0a1a" strokeWidth="1.5" />
+    <ellipse cx="115" cy="90" rx="8" ry="10" fill="#ffff00" stroke="#0d0a1a" strokeWidth="1.5" />
+    <ellipse cx="85" cy="90" rx="2" ry="8" fill="#0d0a1a" />
+    <ellipse cx="115" cy="90" rx="2" ry="8" fill="#0d0a1a" />
+    {/* No nose - just slits */}
+    <line x1="97" y1="100" x2="97" y2="105" stroke="#0d0a1a" strokeWidth="1.5" />
+    <line x1="103" y1="100" x2="103" y2="105" stroke="#0d0a1a" strokeWidth="1.5" />
+    {/* Mouth - thin, sinister */}
+    <path d="M85 115 Q100 118 115 115" fill="none" stroke="#0d0a1a" strokeWidth="2" strokeLinecap="round" />
+    {/* Forked tongue hint */}
+    <path d="M98 118 L98 122 M102 118 L102 122" stroke="#cc3333" strokeWidth="1" />
+  </svg>
+);
+
+const AlienPortrait: React.FC = () => (
+  <svg viewBox="0 0 200 200" className="w-full h-full">
+    <rect width="200" height="200" fill="#050520" />
+    {/* Body - sleek suit */}
+    <path d="M55 200 L60 130 L80 115 L100 120 L120 115 L140 130 L145 200 Z" fill="#2a2a4a" stroke="#0d0a1a" strokeWidth="2.5" />
+    {/* Head - large, elongated */}
+    <ellipse cx="100" cy="85" rx="40" ry="50" fill="#8a8aaa" stroke="#0d0a1a" strokeWidth="2.5" />
+    {/* Eyes - large, black */}
+    <ellipse cx="82" cy="85" rx="12" ry="15" fill="#0d0a1a" />
+    <ellipse cx="118" cy="85" rx="12" ry="15" fill="#0d0a1a" />
+    {/* Eye shine */}
+    <circle cx="78" cy="80" r="3" fill="#4a4a8a" opacity="0.6" />
+    <circle cx="114" cy="80" r="3" fill="#4a4a8a" opacity="0.6" />
+    {/* Small mouth */}
+    <line x1="95" y1="110" x2="105" y2="110" stroke="#0d0a1a" strokeWidth="1.5" strokeLinecap="round" />
+    {/* No nose */}
+    {/* Antenna-like features */}
+    <circle cx="80" cy="45" r="5" fill="#8a8aaa" stroke="#0d0a1a" strokeWidth="1.5" />
+    <circle cx="120" cy="45" r="5" fill="#8a8aaa" stroke="#0d0a1a" strokeWidth="1.5" />
+  </svg>
+);
+
+const CorporationPortrait: React.FC = () => (
+  <svg viewBox="0 0 200 200" className="w-full h-full">
+    <rect width="200" height="200" fill="#1a1a1a" />
+    {/* Body - corporate suit */}
+    <path d="M50 200 L55 130 L80 115 L100 120 L120 115 L145 130 L150 200 Z" fill="#2a2a2a" stroke="#0d0a1a" strokeWidth="2.5" />
+    {/* Tie */}
+    <path d="M95 120 L100 170 L105 120 Z" fill="#8a0000" stroke="#0d0a1a" strokeWidth="1.5" />
+    {/* Face - featureless, corporate */}
+    <ellipse cx="100" cy="90" rx="35" ry="40" fill="#e8d5b8" stroke="#0d0a1a" strokeWidth="2.5" />
+    {/* Sunglasses - corporate */}
+    <rect x="70" y="80" width="25" height="12" rx="2" fill="#0d0a1a" stroke="#444" strokeWidth="1.5" />
+    <rect x="105" y="80" width="25" height="12" rx="2" fill="#0d0a1a" stroke="#444" strokeWidth="1.5" />
+    <line x1="95" y1="86" x2="105" y2="86" stroke="#444" strokeWidth="1.5" />
+    {/* Mouth - neutral, corporate smile */}
+    <line x1="88" y1="110" x2="112" y2="110" stroke="#0d0a1a" strokeWidth="2" strokeLinecap="round" />
+    {/* Briefcase */}
+    <rect x="135" y="155" width="25" height="20" rx="2" fill="#3a2a1a" stroke="#0d0a1a" strokeWidth="1.5" />
+    <rect x="143" y="152" width="9" height="5" rx="1" fill="#3a2a1a" stroke="#0d0a1a" strokeWidth="1" />
+  </svg>
+);
+
 const Portrait: React.FC<PortraitProps> = ({ character, className }) => {
   const portraits: Record<string, React.FC> = {
     architect: ArchitectPortrait,
@@ -314,6 +383,9 @@ const Portrait: React.FC<PortraitProps> = ({ character, className }) => {
     merchant: MerchantPortrait,
     scientist: ScientistPortrait,
     ai: AIPortrait,
+    reptilian: ReptilianPortrait,
+    alien: AlienPortrait,
+    corporation: CorporationPortrait,
   };
 
   const SelectedPortrait = portraits[character] || ArchitectPortrait;
