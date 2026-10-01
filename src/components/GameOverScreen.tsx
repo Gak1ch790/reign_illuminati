@@ -5,9 +5,12 @@ import { gameOverMessages } from '../data/storyData';
 interface GameOverScreenProps {
   type: string;
   onContinue: () => void;
+  directorName?: string;
+  year?: number;
+  turns?: number;
 }
 
-const GameOverScreen: React.FC<GameOverScreenProps> = ({ type, onContinue }) => {
+const GameOverScreen: React.FC<GameOverScreenProps> = ({ type, onContinue, directorName = 'Директор', year = 0, turns = 0 }) => {
   const message = gameOverMessages[type] || gameOverMessages['secrecy_low'];
   
   const getAnimationVariant = () => {
@@ -30,7 +33,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ type, onContinue }) => 
 
   return (
     <motion.div
-      className={`min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b ${backgroundVariants[variant]}`}
+      className={`min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 bg-gradient-to-b ${backgroundVariants[variant]} relative overflow-hidden`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
@@ -41,10 +44,10 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ type, onContinue }) => 
           {[...Array(20)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-4 h-4 bg-orange-500/30 rounded-full"
+              className="absolute w-3 h-3 sm:w-4 sm:h-4 bg-orange-500/30 rounded-full"
               initial={{ 
-                x: Math.random() * window.innerWidth, 
-                y: window.innerHeight + 20,
+                x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 400), 
+                y: (typeof window !== 'undefined' ? window.innerHeight : 800) + 20,
                 scale: Math.random() * 2 + 0.5
               }}
               animate={{ 
@@ -67,10 +70,10 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ type, onContinue }) => 
           {[...Array(10)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute text-2xl"
+              className="absolute text-xl sm:text-2xl"
               initial={{ 
-                x: Math.random() * window.innerWidth, 
-                y: Math.random() * window.innerHeight,
+                x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 400), 
+                y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
                 opacity: 0
               }}
               animate={{ 
@@ -94,14 +97,14 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ type, onContinue }) => 
           {[...Array(15)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute text-2xl"
+              className="absolute text-xl sm:text-2xl"
               initial={{ 
-                x: Math.random() * window.innerWidth, 
+                x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 400), 
                 y: -50,
                 rotate: 0
               }}
               animate={{ 
-                y: window.innerHeight + 50,
+                y: (typeof window !== 'undefined' ? window.innerHeight : 800) + 50,
                 rotate: Math.random() * 720 - 360
               }}
               transition={{ 
@@ -118,14 +121,14 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ type, onContinue }) => 
 
       {/* Main content */}
       <motion.div
-        className="relative z-10 text-center max-w-md"
+        className="relative z-10 text-center max-w-md w-full"
         initial={{ scale: 0.5, y: 50 }}
         animate={{ scale: 1, y: 0 }}
         transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.3 }}
       >
         {/* Emoji */}
         <motion.div
-          className="text-8xl mb-6"
+          className="text-6xl sm:text-8xl mb-4 sm:mb-6"
           animate={{ 
             scale: [1, 1.2, 1],
             rotate: [0, 5, -5, 0]
@@ -137,7 +140,7 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ type, onContinue }) => 
 
         {/* Title */}
         <motion.h1
-          className="text-4xl font-bold text-white mb-4 tracking-wider"
+          className="text-3xl sm:text-4xl font-bold text-white mb-3 sm:mb-4 tracking-wider"
           style={{ fontFamily: 'Cormorant Garamond, serif' }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -146,9 +149,23 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ type, onContinue }) => 
           {message.title}
         </motion.h1>
 
+        {/* Director info */}
+        <motion.div
+          className="bg-black/30 border border-white/10 rounded-xl p-3 sm:p-4 mb-4 sm:mb-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+        >
+          <div className="text-gray-400 text-xs sm:text-sm mb-1">Правление окончено:</div>
+          <div className="text-white font-bold text-base sm:text-lg">{directorName}</div>
+          <div className="text-gray-500 text-xs sm:text-sm mt-1">
+            {year} год • {turns} ходов
+          </div>
+        </motion.div>
+
         {/* Description */}
         <motion.p
-          className="text-gray-300 text-sm leading-relaxed mb-8"
+          className="text-gray-300 text-xs sm:text-sm leading-relaxed mb-6 sm:mb-8 px-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
@@ -158,15 +175,15 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ type, onContinue }) => 
 
         {/* Game Over badge */}
         <motion.div
-          className="inline-block bg-red-900/60 border-2 border-red-500/50 rounded-full px-6 py-2 mb-8"
+          className="inline-block bg-red-900/60 border-2 border-red-500/50 rounded-full px-4 sm:px-6 py-1.5 sm:py-2 mb-6 sm:mb-8"
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 1, type: 'spring' }}
         >
-          <span className="text-red-300 font-bold text-sm tracking-widest">КОНЕЦ ПРАВЛЕНИЯ</span>
+          <span className="text-red-300 font-bold text-xs sm:text-sm tracking-widest">КОНЕЦ ПРАВЛЕНИЯ</span>
         </motion.div>
 
-        {/* Restart button */}
+        {/* Continue button */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -174,20 +191,20 @@ const GameOverScreen: React.FC<GameOverScreenProps> = ({ type, onContinue }) => 
         >
           <button
             onClick={onContinue}
-            className="bg-amber-600 hover:bg-amber-500 active:bg-amber-700 text-white font-bold py-3 px-8 rounded-xl text-lg transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg shadow-amber-900/50"
+            className="bg-amber-600 hover:bg-amber-500 active:bg-amber-700 text-white font-bold py-2.5 sm:py-3 px-6 sm:px-8 rounded-xl text-sm sm:text-lg transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg shadow-amber-900/50 w-full sm:w-auto"
           >
-            → Продолжить
+            → Следующий директор
           </button>
         </motion.div>
 
         {/* Flavor text */}
         <motion.p
-          className="text-gray-500 text-xs mt-6 italic"
+          className="text-gray-500 text-[10px] sm:text-xs mt-4 sm:mt-6 italic px-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.6 }}
         >
-          "Орден вечен. Ты — нет. Но следующий будет лучше... может быть."
+          "Орден вечен. Директора приходят и уходят."
         </motion.p>
       </motion.div>
     </motion.div>

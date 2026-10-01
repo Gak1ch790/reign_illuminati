@@ -90,11 +90,23 @@ export interface MetaProgress {
   collectedItems: string[];
   seenDirectors: string[];
   seenCards: string[];
-  unlockedCards: string[]; // Разблокированные карточки
-  completedArcs: string[]; // Выполненные арки (сохраняются между играми!)
-  branchChoices: Record<string, 'left' | 'right'>; // Сделанные выборы на развилках
+  unlockedCards: string[];
+  completedArcs: string[];
+  branchChoices: Record<string, 'left' | 'right'>;
   endings: string[];
   achievements: string[];
+  // Расширенная статистика
+  totalChoices: number;
+  leftChoices: number;
+  rightChoices: number;
+  gamesByEra: Record<string, number>;
+  directorDeaths: Record<string, number>;
+  playTime: number;
+  level: number;
+  experience: number;
+  bestScore: number;
+  currentStreak: number;
+  bestStreak: number;
 }
 
 export interface GameState {

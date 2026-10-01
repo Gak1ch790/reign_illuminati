@@ -15,6 +15,17 @@ const defaultProgress: MetaProgress = {
   branchChoices: {},
   endings: [],
   achievements: [],
+  totalChoices: 0,
+  leftChoices: 0,
+  rightChoices: 0,
+  gamesByEra: {},
+  directorDeaths: {},
+  playTime: 0,
+  level: 1,
+  experience: 0,
+  bestScore: 0,
+  currentStreak: 0,
+  bestStreak: 0,
 };
 
 export const loadMetaProgress = (): MetaProgress => {

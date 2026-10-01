@@ -88,22 +88,7 @@ const GameCard: React.FC<GameCardProps> = ({ card, onChoice }) => {
         <div className="absolute inset-0 bg-gradient-to-b from-gray-800 via-gray-850 to-gray-900" />
         <div className={`absolute inset-0 bg-gradient-to-b ${getCardGlow()}`} />
         
-        {/* Special badges */}
-        {isBranchPoint && (
-          <div className="absolute top-2 right-2 z-30 bg-amber-500 text-black text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">
-            ⚡ РАЗВИЛКА
-          </div>
-        )}
-        {isEasterEgg && (
-          <div className="absolute top-2 right-2 z-30 bg-purple-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-            ✨ ПАСХАЛКА
-          </div>
-        )}
-        {isArc && (
-          <div className="absolute top-2 right-2 z-30 bg-cyan-500 text-black text-[10px] font-bold px-2 py-0.5 rounded-full">
-            📖 АРКА
-          </div>
-        )}
+        {/* Special badges removed - no visual hints */}
 
         {/* Content */}
         <div className="relative z-10">

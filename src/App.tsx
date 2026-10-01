@@ -223,6 +223,19 @@ function App() {
       playGameOverSound();
       setGameOverType(gameOverCheck);
       
+      // Обновляем счетчик смертей директора
+      const currentDirectorId = getCurrentDirector().id;
+      const newDirectorDeaths = { ...metaProgress.directorDeaths };
+      newDirectorDeaths[currentDirectorId] = (newDirectorDeaths[currentDirectorId] || 0) + 1;
+      
+      // Обновляем статистику по эпохам
+      const currentEraId = getCurrentEra().id;
+      const newGamesByEra = { ...metaProgress.gamesByEra };
+      newGamesByEra[currentEraId] = (newGamesByEra[currentEraId] || 0) + 1;
+      
+      // Подсчитываем выборы
+      const isRight = choice === currentCard?.rightChoice;
+      
       const updatedProgress = updateMetaProgress({
         totalGames: metaProgress.totalGames + 1,
         totalTurns: metaProgress.totalTurns + totalTurns + 1,
@@ -232,11 +245,27 @@ function App() {
         seenCards: Array.from(new Set([...metaProgress.seenCards, ...history, currentCard?.id || ''])),
         completedArcs: Array.from(new Set([...metaProgress.completedArcs, ...sessionArcs])),
         branchChoices: { ...metaProgress.branchChoices, ...branchChoices },
+        totalChoices: metaProgress.totalChoices + totalTurns + 1,
+        leftChoices: metaProgress.leftChoices + (isRight ? 0 : totalTurns + 1),
+        rightChoices: metaProgress.rightChoices + (isRight ? totalTurns + 1 : 0),
+        gamesByEra: newGamesByEra,
+        directorDeaths: newDirectorDeaths,
+        playTime: metaProgress.playTime + Math.floor((totalTurns + 1) * 0.5),
+        experience: metaProgress.experience + (totalTurns + 1) * 10,
+        bestScore: Math.max(metaProgress.bestScore, totalTurns + 1),
       });
+      
+      // Обновляем уровень
+      const newLevel = Math.floor(updatedProgress.experience / 100) + 1;
+      if (newLevel > updatedProgress.level) {
+        updatedProgress.level = newLevel;
+      }
       
       checkAchievements(updatedProgress);
       setMetaProgress(updatedProgress);
-      setScreen('gameover');
+      
+      // Переходим к следующему директору
+      advanceToNextDirector();
       return;
     }
 
@@ -250,6 +279,41 @@ function App() {
     const nextCard = getNextCard(newStats, [...history, currentCard?.id || ''], era.id, currentYear, sessionArcs, branchChoices);
     setCurrentCard(nextCard);
     setCardKey(prev => prev + 1);
+  };
+
+  const advanceToNextDirector = () => {
+    // После Game Over меняем директора в текущей эпохе
+    const era = getCurrentEra();
+    const nextDirectorIndex = (currentDirectorIndex + 1) % era.directors.length;
+    
+    // Если прошли всех директоров в эпохе, переходим к следующей эпохе
+    if (nextDirectorIndex === 0) {
+      const updatedProgress = updateMetaProgress({
+        completedEras: Array.from(new Set([...metaProgress.completedEras, era.id])),
+        completedArcs: Array.from(new Set([...metaProgress.completedArcs, ...sessionArcs])),
+        branchChoices: { ...metaProgress.branchChoices, ...branchChoices },
+      });
+      setMetaProgress(updatedProgress);
+
+      const nextEraIndex = currentEraIndex + 1;
+      if (nextEraIndex >= eras.length) {
+        setScreen('ending');
+        return;
+      }
+      
+      setPreviousDirector(getCurrentDirector());
+      setCurrentEraIndex(nextEraIndex);
+      setCurrentDirectorIndex(0);
+    } else {
+      setPreviousDirector(getCurrentDirector());
+      setCurrentDirectorIndex(nextDirectorIndex);
+    }
+    
+    setTurn(0);
+    setStats(INITIAL_STATS);
+    setHistory([]);
+    setCollectedItems([]);
+    setScreen('heir');
   };
 
   const advanceToNextEra = () => {
@@ -361,7 +425,13 @@ function App() {
   }
 
   if (screen === 'gameover') {
-    return <GameOverScreen type={gameOverType} onContinue={() => setScreen('progress')} />;
+    return <GameOverScreen 
+      type={gameOverType} 
+      onContinue={() => setScreen('progress')} 
+      directorName={getCurrentDirector().name}
+      year={currentYear}
+      turns={totalTurns}
+    />;
   }
 
   if (screen === 'progress') {
